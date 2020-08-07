@@ -7,51 +7,6 @@ library(rjson)
 library(jsonlite)
 library(ggcorrplot)
 
-
-#----------------------------------------------------------------------------------------------------BACKGROUND
-#Why - passionate about entertainment/social media - video
-#Who would benefit: content creators, marketing agencies, youtube as a business
-#give an overview of these videos, further indepth analysis could follow based on outcomes (ie. trend by category)
-
-#what are trending videos? Something that works alongside the home page to provide users with content to watch. While the Home feed is 
-#HIGHLY personalised on previous views, what the user watched longest, engagement, subscriptions, the trending page is very broad 
-#as it shows what many other people tend to watch. This makes it a great platform to gain a very large audience quickly
-
-
-#Background: why are trending videos important/
-
-
-#1. Trending data between "2017-11-14" and "2018-06-14" for US, CA and GB
-
-#EDA: Purpose is to explore the data and 
-              #1. develop understanding of the data
-              #2. assess differences between english speaking countries 
-                                        #(given that their culture/interests might be similar than let's say someone from JPN or RUS and data availability)
-
-#Thus, all throughout, we will generate questions, answer them with data and then further refine these questions based on what we found out
-
-#Knowing all these, these are the next steps I'd take (not part of current scope)
-      #Collect some of the following public metrics: 
-          #subscribers (if made public) as they could explain
-          #other social media profiles (high fan base could contribute to this engagement)
-          #reshares (reddit, facebook, etc)
-          #length of video
-          #SEO quality (nice but possibily not as important)
-      #Would also help to have the following private metrics: usually only the individual accounts have access to these
-          #watch time and % of video watched (the importance and how this related to ads/revenue) - customer satisfaction
-      #Other analyses to further depth from my analysis:
-          #string search and read through comments to understand sentiment/reactions
-          ##See which factors contributed the most, further indepth analyses on those by segments
-
-#Other uses, different scope:
-    #Sentiment analysis in a variety of forms
-    #Categorising YouTube videos based on their comments and statistics.
-    #Training ML algorithms like RNNs to generate their own YouTube comments.
-    #Analysing what factors affect how popular a YouTube video will be.
-    #Statistical analysis over time.
-
-
-
 #----------------------------------------------------------------------------------------------------IMPORT DATA
 #get datasets for the countries we're interested in
 gb_data <- read_csv("~/DS/YouTube - EDA/Datasets/GBvideos.csv")
@@ -137,8 +92,6 @@ raw_data <- raw_data %>%
         
 rm(video_error_or_removed)
 
-#back up our existing data into raw_data_backup
-raw_data_backup <- raw_data
 
 #other two interesting columns are comments/rating flags so need investigating
 
@@ -156,6 +109,25 @@ table(quantile(raw_data$ratings_disabled, probs = seq(0, 1, length.out=101)))
 #it is likely that these might be more controversial and we will look at this later in the data exploration process
 #the dataset is before the rule with videos aimed to children will not be allowed comments so that's not a factor
 #however, they will be removed from engagement-specific analysis as non existent data (0s would act as outliers)
+
+
+#-----------------------------------------CHECK FOR NAs
+raw_data %>% summarise_all(~ sum(is.na(.)))
+#is this because of ratings being disabled?
+raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
+#it looks like that's the case for al but 3 of them. Those are na due to not having any likes/dislikes so we will adjust the calculation slightly
+raw_data <- raw_data %>% mutate(perc_likes = ifelse(ratings_disabled == "FALSE" & likes==0, 0, round(likes / (likes+dislikes), digits=2)*100))
+
+raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
+#this error has been fixed now and NAs are only showing for those with ratings disabled
+
+#-----------------------------------------CHECK FOR NAs
+raw_data %>% summarise_all(~ sum(is.null(.)))
+#no issues here
+
+
+#back up our existing data into raw_data_backup
+raw_data_backup <- raw_data
 
 #-----------------------------------------COMMENTS DISABLED ANALYSIS
 #1
@@ -193,21 +165,15 @@ rm(ratings_disabled, comments_disabled_by_country)
 
 
 
-#-----------------------------------------CHECK FOR NAs
-raw_data %>% summarise_all(~ sum(is.na(.)))
-#is this because of ratings being disabled?
-raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
-#it looks like that's the case for al but 3 of them. Those are na due to not having any likes/dislikes so we will adjust the calculation slightly
-raw_data <- raw_data %>% mutate(perc_likes = ifelse(ratings_disabled == "FALSE" & likes==0, 0, round(likes / (likes+dislikes), digits=2)*100))
-
-raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
-#this error has been fixed now and NAs are only showing for those with ratings disabled
 
 
 
-#-----------------------------------------CHECK FOR NAs
-raw_data %>% summarise_all(~ sum(is.null(.)))
-#no issues here
+
+
+
+
+
+
 
 
 
@@ -237,6 +203,11 @@ ggcorrplot(corr, method = "square",
 
 #remove variables
 rm(corr, pmat, raw_data_corr)
+
+
+
+
+
 
 
 

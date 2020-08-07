@@ -365,45 +365,59 @@ summary {
 </div>
 
 
-<div id="youtube-trending-videos---data-cleaning-and-tidying" class="section level1">
-<h1>YouTube Trending Videos - Data cleaning and tidying</h1>
-<p><code>{r setup, include=FALSE} knitr::opts_chunk$set(echo = TRUE)</code></p>
-</div>
-<div id="data-import" class="section level1">
-<h1>Data import</h1>
-<p>This is an R Markdown format used for publishing markdown documents to GitHub. When you click the <strong>Knit</strong> button all R code chunks are run and a markdown file (.md) suitable for publishing to GitHub is generated.</p>
-<div id="including-code" class="section level2">
-<h2>Including Code</h2>
-<p>You can include R code in the document as follows:</p>
-<p><code>{r cars} summary(cars)</code></p>
-</div>
-<div id="including-plots" class="section level2">
-<h2>Including Plots</h2>
-<p>You can also embed plots, for example:</p>
-<p><code>{r pressure, echo=FALSE} plot(pressure)</code></p>
-<p>Note that the <code>echo = FALSE</code> parameter was added to the code chunk to prevent printing of the R code that generated the plot.</p>
+<div id="youtube-trending-videos" class="section level1">
+<h1>YouTube Trending Videos</h1>
+<div id="table-of-contents" class="section level2">
+<h2>Table of contents:</h2>
+<ol style="list-style-type: decimal">
+<li>Background</li>
+<li>Data tidy</li>
+<li>Analysis 3.1 Trending date 3.1.1 How many videos? 3.2 Views</li>
+</ol>
 </div>
 </div>
-<div id="are-there-any-difference-in-the-youtube-trending-videos-audience-across-three-english-speaking-countries-canada-great-britain-usa" class="section level1">
-<h1>Are there any difference in the YouTube Trending Videos Audience across three English-speaking Countries? (Canada, Great Britain, USA)</h1>
-<div id="background" class="section level2">
-<h2>Background</h2>
-<p>#Why this dataset? YouTube has been a massive influence and source of knowledge both in my professional life as well in my personal goals/ambitions. Thus, I thought it would be interesting to explore this dataset and see what insights I could come up with</p>
-<p>#What are Trending Videos and why are they important? Trending videos work alongside the home page to provide users with content to watch. While the Home feed is <strong>highly</strong> personalised on previous views, what the user watched longest, engagement, subscriptions, the trending page is very broad and is the same across all accounts.</p>
+<div id="background" class="section level1">
+<h1>1) Background</h1>
+<div id="why-this-dataset" class="section level3">
+<h3>Why this dataset?</h3>
+<p>YouTube has been a massive influence and source of knowledge both in my professional life as well in my personal goals/ambitions. Thus, I thought it would be interesting to explore this dataset and see what insights I could come up with</p>
+</div>
+<div id="what-are-trending-videos-and-why-are-they-important" class="section level3">
+<h3>What are Trending Videos and why are they important?</h3>
+<p>Trending videos work alongside the home page to provide users with content to watch.</p>
+<p>While the Home feed is <strong>highly</strong> personalised on previous views, what the user watched longest, engagement, subscriptions, the trending page is very broad and is the same across all accounts.</p>
 <p>Since it displays this across hundreds of thousands of accounts, this makes it a great source of views for content creators.</p>
-<p>#Purpose Purpose is to explore the data and <em>1. develop understanding of the data </em>2. assess differences between english speaking countries</p>
-<p>Thus, all throughout, we will generate questions, answer them with data and then further refine these questions based on what we found out.</p>
-<p>#To whom might this be helpful? <em>content creators / marketing agencies can get a better understanding of the audience which would help tailor content </em>data science enthusiasts as they might get new ideas for how to use R (for beginners) or see other people’s analyses (for intermediates) *people that are generally interested in YouTube</p>
 </div>
+<div id="purpose-of-this-analysis" class="section level3">
+<h3>Purpose of this analysis:</h3>
+<ol style="list-style-type: decimal">
+<li>Develop an understanding of the YouTube Trending Videos</li>
+<li>Assess differences between English-speaking countries (Canada, Great Britain, USA)</li>
+</ol>
+<p><strong>Thus, all throughout, we will generate questions, answer them with data and then further refine these questions based on what we found out.</strong></p>
 </div>
-<div id="key-insights" class="section level1">
-<h1>Key Insights:</h1>
+<div id="to-whom-might-this-be-helpful" class="section level3">
+<h3>To whom might this be helpful?</h3>
+<p><em>content creators / marketing agencies can get a better understanding of the audience which would help tailor content </em>data science enthusiasts as they might get new ideas for how to use R (for beginners) or see other people’s analyses (for intermediates) *people that are generally interested in YouTube</p>
+</div>
+<div id="key-insights" class="section level2">
+<h2>Key Insights:</h2>
 <ul>
 <li>CA tends to have videos that only trend for a very short period, while in the GB/US they typically trend significantly longer (up to 38 days)</li>
 </ul>
-<p>##Dataset information:</p>
-<p>#1. Trending data between “2017-11-14” and “2018-06-14” for US, CA and GB</p>
-<p>The following packages from R is required to run the Rmd file:</p>
+</div>
+<div id="dataset-information" class="section level2">
+<h2>Dataset information:</h2>
+<ul>
+<li>Trending data between “2017-11-14” and “2018-06-14” for US, CA and GB</li>
+<li>Contains &gt; 120,000 videos information in the tree countries</li>
+</ul>
+<p>#videos by day #total videos</p>
+</div>
+</div>
+<div id="data-import-tidying-cleaning" class="section level1">
+<h1>2) Data import, tidying, cleaning</h1>
+<p>The following packages were needed to produce the output:</p>
 <pre class="r"><code>library(ggplot2)
 library(dplyr)
 library(lubridate)
@@ -412,52 +426,168 @@ library(readr)
 library(rjson)
 library(jsonlite)
 library(ggcorrplot)</code></pre>
-<div id="part-1-download-data" class="section level2">
-<h2>Part 1: Download Data</h2>
-<p>All the data is downloaded from <a href="https://archive.org/details/archiveteam-json-twitterstream" class="uri">https://archive.org/details/archiveteam-json-twitterstream</a> which is a archive of old tweets. As this part takes some time to run. A csv file of cleaned and parsed data is also included if part 1 is to be skipped.</p>
-<p>Download Data from <a href="https://archive.org/details/archiveteam-json-twitterstream" class="uri">https://archive.org/details/archiveteam-json-twitterstream</a> download for 2011/10/24 to 2011/10/30</p>
-<pre class="r"><code>dir.create(&quot;data&quot;)
-for(i in 23:30){
-  URL = paste(&quot;https://archive.org/download/archiveteam-json-twitterstream/twitter-stream-2011-10-&quot;,i,&quot;.zip&quot;, sep=&quot;&quot;)
-  download.file(URL, destfile = &quot;./data/twitter.zip&quot;)
-  unzip(&quot;./data/twitter.zip&quot;, exdir=&quot;./data&quot;)
-}</code></pre>
-<p>Read the tweets file by file and only keep the ones from the UK and in English. It takes some time to run. The result is written to a csv file to avoid the need to run this part in the future.</p>
-<pre class="r"><code>require(streamR)
+<p>Download data:</p>
+<p>All the data is downloaded from <a href="https://www.kaggle.com/datasnaek/youtube-new" class="uri">https://www.kaggle.com/datasnaek/youtube-new</a>.</p>
+<p>Raw data files are available within the “Datasets” folder.</p>
+<p>If you’d like to skip the data importing, manipulating and cleaning, a csv file of cleaned and parsed data is also included under “raw_data.csv”.</p>
+<div id="import" class="section level3">
+<h3>2.1. Import</h3>
+<pre class="r"><code>#get datasets for the countries we&#39;re interested in
+gb_data &lt;- read_csv(&quot;~/DS/YouTube - EDA/Datasets/GBvideos.csv&quot;)
+us_data &lt;- read_csv(&quot;~/DS/YouTube - EDA/Datasets/USvideos.csv&quot;)
+ca_data &lt;- read_csv(&quot;~/DS/YouTube - EDA/Datasets/CAvideos.csv&quot;)
+
+#add a flag so that we know which country belongs to which dataset
+gb_data$country &lt;- &quot;GB&quot;
+us_data$country &lt;- &quot;US&quot;
+ca_data$country &lt;- &quot;CA&quot;
+
+#get category data
+us_cat_json &lt;- fromJSON(&quot;~/DS/YouTube/US_category_id.json&quot;)
+gb_cat_json &lt;- fromJSON(&quot;~/DS/YouTube/GB_category_id.json&quot;)
+ca_cat_json &lt;- fromJSON(&quot;~/DS/YouTube/CA_category_id.json&quot;)
+summary(us_cat_json)
+
+#bind together
+US_category &lt;-  as.data.frame(cbind(us_cat_json[[&quot;items&quot;]][[&quot;id&quot;]], us_cat_json[[&quot;items&quot;]][[&quot;snippet&quot;]][[&quot;title&quot;]]))
+GB_category &lt;-  as.data.frame(cbind(gb_cat_json[[&quot;items&quot;]][[&quot;id&quot;]], gb_cat_json[[&quot;items&quot;]][[&quot;snippet&quot;]][[&quot;title&quot;]]))
+CA_category &lt;-  as.data.frame(cbind(ca_cat_json[[&quot;items&quot;]][[&quot;id&quot;]], ca_cat_json[[&quot;items&quot;]][[&quot;snippet&quot;]][[&quot;title&quot;]]))
+
+#change column names
+names(US_category) &lt;- c(&quot;category_id&quot;,&quot;category_title&quot;)
+names(GB_category) &lt;- c(&quot;category_id&quot;,&quot;category_title&quot;)
+names(CA_category) &lt;- c(&quot;category_id&quot;,&quot;category_title&quot;)
+
+#merge data
+us_data &lt;- merge(x = us_data, y = US_category, by = &quot;category_id&quot;)
+gb_data &lt;- merge(x = gb_data, y = GB_category, by = &quot;category_id&quot;)
+ca_data &lt;- merge(x = ca_data, y = CA_category, by = &quot;category_id&quot;)
+
+#combine into one dataset and remove previous variables from memory to keep the environment clean
+raw_data &lt;- as.data.table(rbind(gb_data, us_data, ca_data))
+
+rm(us_data, gb_data, ca_data)
+rm(US_category, GB_category, CA_category)
+rm(us_cat_json, gb_cat_json, ca_cat_json)
+</code></pre>
+</div>
+<div id="clean-and-tidy-data" class="section level3">
+<h3>2.2. Clean and Tidy Data</h3>
+<pre class="r"><code>#I usually like to save a backup of the raw data to make it easier to revert changes so let&#39;s do that
+raw_data_backup &lt;- raw_data
+
+#let&#39;s check the structure of the data
+str(raw_data)
+#we can spot a few class problems as well as add some additional columns
+
+#clean and format dates/times
+raw_data$trending_date &lt;- ydm(raw_data$trending_date)
+raw_data$publish_date &lt;- ymd(substr(raw_data$publish_time,start = 1,stop = 10))
+raw_data$hour &lt;- format(strptime(raw_data$publish_time,&quot;%Y-%m-%d %H:%M:%S&quot;),&#39;%H&#39;)
+
+raw_data$days_diff &lt;- as.numeric(raw_data$trending_date-raw_data$publish_date)
+
+#remove unnecessary data
+raw_data &lt;- raw_data %&gt;%
+        select(-description, -tags, -category_id, -publish_time)
+
+#add new columns for further analysis
+raw_data &lt;- raw_data %&gt;%
+        mutate(perc_engagement = round((likes + dislikes + comment_count) / views, digits = 2)*100,
+               perc_likes = round(likes / (likes+dislikes), digits=2)*100,
+               perc_comments = round(comment_count/views, digits = 2) * 100)
+
+#we also want to change hour and country fields to factors
+raw_data$hour &lt;- as.factor(raw_data$hour)
+raw_data$country &lt;- as.factor(raw_data$country)
+
+#remove video_error_or_removed videos as we do not want these
+table(raw_data$video_error_or_removed)
+
+#it&#39;s a very small dataset so we will just remove without looking into these too much as they were deleted/errors/copyright violations
+video_error_or_removed &lt;- raw_data %&gt;% 
+        filter (video_error_or_removed == &quot;TRUE&quot;)%&gt;%
+        select(country, channel_title, title, video_id) %&gt;%
+        group_by(country, channel_title, title, video_id) %&gt;%
+        summarize(count = n()) %&gt;% #count = days_trending
+        arrange(desc(count)) %&gt;%
+        print()
+
+raw_data &lt;- raw_data %&gt;%
+        filter (video_error_or_removed == &quot;FALSE&quot;) %&gt;%
+        select (-video_error_or_removed)
+        
+rm(video_error_or_removed)
+
+#-----------------------------------------CHECK FOR NAs
+raw_data %&gt;% summarise_all(~ sum(is.na(.)))
+#is this because of ratings being disabled?
+raw_data %&gt;% filter(is.na(perc_likes)) %&gt;% group_by(ratings_disabled) %&gt;% summarize (count = n())
+#it looks like that&#39;s the case for al but 3 of them. Those are na due to not having any likes/dislikes so we will adjust the calculation slightly
+raw_data &lt;- raw_data %&gt;% mutate(perc_likes = ifelse(ratings_disabled == &quot;FALSE&quot; &amp; likes==0, 0, round(likes / (likes+dislikes), digits=2)*100))
+
+raw_data %&gt;% filter(is.na(perc_likes)) %&gt;% group_by(ratings_disabled) %&gt;% summarize (count = n())
+#this error has been fixed now and NAs are only showing for those with ratings disabled
+
+#-----------------------------------------CHECK FOR NULLS
+raw_data %&gt;% summarise_all(~ sum(is.null(.)))
+#no issues here
+
+#back up our existing data into raw_data_backup
+raw_data_backup &lt;- raw_data</code></pre>
+</div>
+<div id="data-understanding" class="section level3">
+<h3>2.3. Data understanding</h3>
+<p>At this point, there are a few columns that we need to look into further as I am not fully confident I understand: * comments_disabled * ratings_disabled * hour</p>
+<pre class="r"><code>
+#comments_disabled
+table(raw_data$comments_disabled)
+table(quantile(raw_data$comments_disabled, probs = seq(0, 1, length.out=101)))
+#~1% of the data has comments disabled
+
+#ratings_disabled
+table(raw_data$ratings_disabled)
+table(quantile(raw_data$ratings_disabled, probs = seq(0, 1, length.out=101)))
+#&lt;1% of the data has ratings disabled
+
+#although they&#39;re not a significant chunk of the dataset, we won&#39;t remove these from the raw data, as these are genuine videos
+#it is likely that these might be more controversial and we will look at this later in the data exploration process
+#the dataset is before the rule with videos aimed to children will not be allowed comments so that&#39;s not a factor
+#however, they will be removed from engagement-specific analysis as non existent data (0s would act as outliers)
 
 
-tweets = data.frame()
+#-----------------------------------------COMMENTS DISABLED ANALYSIS
+#1
+table(raw_data$comments_disabled)
 
-for(i in 23:30){
-  for(j in 0:23){
-    for(k in 0:59){
-      
-      if(j&lt;10&amp;&amp;k&lt;10){
-        directory = paste(&quot;./data/&quot;, i, &quot;/0&quot;, j, &quot;/0&quot;, k, &quot;.json.bz2&quot;, sep=&quot;&quot;)
-      }else if(j&lt;10){
-        directory = paste(&quot;./data/&quot;, i, &quot;/0&quot;, j, &quot;/&quot;, k, &quot;.json.bz2&quot;, sep=&quot;&quot;)
-      }else if(k&lt;10){
-        directory = paste(&quot;./data/&quot;, i, &quot;/&quot;, j, &quot;/0&quot;, k, &quot;.json.bz2&quot;, sep=&quot;&quot;)
-      }else{
-        directory = paste(&quot;./data/&quot;, i, &quot;/&quot;, j, &quot;/&quot;, k, &quot;.json.bz2&quot;, sep=&quot;&quot;)
-      }
-      
-      if(!file.exists(directory)){
-        next
-      }
-      temp = parseTweets(directory)
-      temp = temp[!is.na(temp$country_code)&amp;temp$country_code==&quot;GB&quot;&amp;temp$user_lang==&quot;en&quot;,]
-      
-      tweets = rbind(tweets, temp)
-    }
+#2
+#facet by country but not by category
+comments_disabled_by_country &lt;- raw_data %&gt;%
+  select (country, likes, dislikes, comments_disabled) %&gt;%
+  group_by (country, comments_disabled) %&gt;%
+  summarize(count = n(),
+            dislikes_perc = round(sum(dislikes)/(sum(likes)+sum(dislikes))*100,0)) %&gt;%
+  print()
 
-  }
-}
+ggplot(comments_disabled_by_country, aes(country, dislikes_perc , fill = comments_disabled)) + 
+  geom_col(position = &quot;dodge&quot;)
+
+#potentially some controversial videos choose to take comments down to avoid backlash (particularly in news and entertainment)
+#these look to be more dislikes, on average than likes (but sample size is also much smaller so exceptions are likely to skew data)
 
 
+#-----------------------------------------RATINGS DISABLED ANALYSIS
 
-#str &lt;- strptime(gbtweets$created_at[1], &quot;%a %b %d %H:%M:%S %z %Y&quot;, tz = &quot;UTC&quot;)
-write.csv(tweets, file = &quot;tweets.csv&quot;,row.names=FALSE, na=&quot;&quot;)</code></pre>
+ratings_disabled &lt;- raw_data %&gt;% 
+  filter (ratings_disabled == &quot;TRUE&quot;) %&gt;%
+  select (category_title, comment_count) %&gt;%
+  group_by (category_title) %&gt;%
+  summarize(count = n()) %&gt;%
+  arrange(desc(count)) %&gt;%
+  print
+
+#remove from memory
+rm(ratings_disabled, comments_disabled_by_country)</code></pre>
 </div>
 <div id="part-2-analysis" class="section level2">
 <h2>Part 2 Analysis</h2>
@@ -473,53 +603,42 @@ head(tweets$text)</code></pre>
 ## [5] &quot;Used car recently added: #VOLKSWAGEN #GOLF only £695 http://t.co/lsGgIVEN&quot;                           
 ## [6] &quot;http://t.co/whsQJLMQ&quot;</code></pre>
 <p>Here are the first few tweets of the day. Good, We spotted one negative(#3) and one positive(#4) tweets already</p>
-<p>``` r #create data frame tweets=data.frame(time=tweets<span class="math inline">\(created_at, text=tweets\)</span>text, sentiment=NA, postw=0, negtw=0, tottw=1)</p>
-<p>#Detect sentiment for each tweet for(i in 1:nrow(tweets)){ #Some tweets have no words which would cause error with polarity() #Therefore the try function sentiment = try(polarity(sent_detect(tweets<span class="math inline">\(text[i])))  if(class(sentiment)==&quot;try-error&quot;){  tweets\)</span>sentiment[i]=NA }else{ #sentiment is assigned value returned from polarity() function tweets<span class="math inline">\(sentiment[i]=sentiment\)</span>group<span class="math inline">\(ave.polarity  if(is.nan(sentiment\)</span>group$ave.polarity)){ next</p>
-<pre><code>#0.3 is also used as classification threshold for future applications
-}else if(sentiment$group$ave.polarity&gt;0.3){
-  tweets$postw[i]=1
-}else if(sentiment$group$ave.polarity&lt;(-0.3)){
-  tweets$negtw[i]=1
-}</code></pre>
-<p>} }</p>
-<p>#remove tweets that qdap() cannot distinguish tweets=tweets[!is.nan(tweets<span class="math inline">\(sentiment)&amp;!is.na(tweets\)</span>sentiment),]</p>
-<p>#—————————————————————————————————-IMPORT DATA #get datasets for the countries we’re interested in gb_data &lt;- read_csv(“~/DS/YouTube - EDA/Datasets/GBvideos.csv”) us_data &lt;- read_csv(“~/DS/YouTube - EDA/Datasets/USvideos.csv”) ca_data &lt;- read_csv(“~/DS/YouTube - EDA/Datasets/CAvideos.csv”)</p>
-<p>#add a flag so that we know which country belongs to which dataset gb_data<span class="math inline">\(country &lt;- &quot;GB&quot; us_data\)</span>country &lt;- “US” ca_data$country &lt;- “CA”</p>
-<p>#get category data us_cat_json &lt;- fromJSON(“~/DS/YouTube/US_category_id.json”) gb_cat_json &lt;- fromJSON(“~/DS/YouTube/GB_category_id.json”) ca_cat_json &lt;- fromJSON(“~/DS/YouTube/CA_category_id.json”) summary(us_cat_json)</p>
-<p>#bind together US_category &lt;- as.data.frame(cbind(us_cat_json[[“items”]][[“id”]], us_cat_json[[“items”]][[“snippet”]][[“title”]])) GB_category &lt;- as.data.frame(cbind(gb_cat_json[[“items”]][[“id”]], gb_cat_json[[“items”]][[“snippet”]][[“title”]])) CA_category &lt;- as.data.frame(cbind(ca_cat_json[[“items”]][[“id”]], ca_cat_json[[“items”]][[“snippet”]][[“title”]]))</p>
-<p>#change column names names(US_category) &lt;- c(“category_id”,“category_title”) names(GB_category) &lt;- c(“category_id”,“category_title”) names(CA_category) &lt;- c(“category_id”,“category_title”)</p>
-<p>#merge data us_data &lt;- merge(x = us_data, y = US_category, by = “category_id”) gb_data &lt;- merge(x = gb_data, y = GB_category, by = “category_id”) ca_data &lt;- merge(x = ca_data, y = CA_category, by = “category_id”)</p>
-<p>#combine into one dataset and remove previous variables from memory raw_data &lt;- as.data.table(rbind(gb_data, us_data, ca_data))</p>
-<p>rm(us_data, gb_data, ca_data) rm(US_category, GB_category, CA_category) rm(us_cat_json, gb_cat_json, ca_cat_json)</p>
-<p>#—————————————————————————————————–CLEAN AND TIDY DATA #let’s check the structure of the data str(raw_data) #we can spot a few class problems as well as add some additional columns</p>
-<p>#clean and format dates/times raw_data<span class="math inline">\(trending_date &lt;- ydm(raw_data\)</span>trending_date) raw_data<span class="math inline">\(publish_date &lt;- ymd(substr(raw_data\)</span>publish_time,start = 1,stop = 10)) raw_data<span class="math inline">\(hour &lt;- format(strptime(raw_data\)</span>publish_time,“%Y-%m-%d %H:%M:%S”),‘%H’)</p>
-<p>raw_data<span class="math inline">\(days_diff &lt;- as.numeric(raw_data\)</span>trending_date-raw_data$publish_date)</p>
-<p>#remove unnecessary data raw_data &lt;- raw_data %&gt;% select(-description, -tags, -category_id, -publish_time)</p>
-<p>#add new columns for further analysis raw_data &lt;- raw_data %&gt;% mutate(perc_engagement = round((likes + dislikes + comment_count) / views, digits = 2)<em>100, perc_likes = round(likes / (likes+dislikes), digits=2)</em>100, perc_comments = round(comment_count/views, digits = 2) * 100)</p>
-<p>#we also want to change hour and country fields to factors raw_data<span class="math inline">\(hour &lt;- as.factor(raw_data\)</span>hour) raw_data<span class="math inline">\(country &lt;- as.factor(raw_data\)</span>country)</p>
-<p>#remove video_error_or_removed videos as we do not want these table(raw_data$video_error_or_removed)</p>
-<p>#it’s a very small dataset so we will just remove without looking into these too much as they were deleted/errors/copyright violations video_error_or_removed &lt;- raw_data %&gt;% filter (video_error_or_removed == “TRUE”)%&gt;% select(country, channel_title, title, video_id) %&gt;% group_by(country, channel_title, title, video_id) %&gt;% summarize(count = n()) %&gt;% #count = days_trending arrange(desc(count)) %&gt;% print()</p>
-<p>raw_data &lt;- raw_data %&gt;% filter (video_error_or_removed == “FALSE”) %&gt;% select (-video_error_or_removed)</p>
-<p>rm(video_error_or_removed)</p>
-<p>#back up our existing data into raw_data_backup raw_data_backup &lt;- raw_data</p>
-<p>#other two interesting columns are comments/rating flags so need investigating</p>
-<p>#comments_disabled table(raw_data<span class="math inline">\(comments_disabled) table(quantile(raw_data\)</span>comments_disabled, probs = seq(0, 1, length.out=101))) #~1% of the data has comments disabled</p>
-<p>#ratings_disabled table(raw_data<span class="math inline">\(ratings_disabled) table(quantile(raw_data\)</span>ratings_disabled, probs = seq(0, 1, length.out=101))) #&lt;1% of the data has ratings disabled</p>
-<p>#although they’re not a significant chunk of the dataset, we won’t remove these from the raw data, as these are genuine videos #it is likely that these might be more controversial and we will look at this later in the data exploration process #the dataset is before the rule with videos aimed to children will not be allowed comments so that’s not a factor #however, they will be removed from engagement-specific analysis as non existent data (0s would act as outliers)</p>
-<p>#—————————————–COMMENTS DISABLED ANALYSIS #1 table(raw_data$comments_disabled)</p>
-<p>#2 #facet by country but not by category comments_disabled_by_country &lt;- raw_data %&gt;% select (country, likes, dislikes, comments_disabled) %&gt;% group_by (country, comments_disabled) %&gt;% summarize(count = n(), dislikes_perc = round(sum(dislikes)/(sum(likes)+sum(dislikes))*100,0)) %&gt;% print()</p>
-<p>ggplot(comments_disabled_by_country, aes(country, dislikes_perc , fill = comments_disabled)) + geom_col(position = “dodge”)</p>
-<p>#potentially some controversial videos choose to take comments down to avoid backlash (particularly in news and entertainment) #these look to be more dislikes, on average than likes (but sample size is also much smaller so exceptions are likely to skew data)</p>
-<p>#—————————————–RATINGS DISABLED ANALYSIS</p>
-<p>ratings_disabled &lt;- raw_data %&gt;% filter (ratings_disabled == “TRUE”) %&gt;% select (category_title, comment_count) %&gt;% group_by (category_title) %&gt;% summarize(count = n()) %&gt;% arrange(desc(count)) %&gt;% print</p>
-<p>#remove from memory rm(ratings_disabled, comments_disabled_by_country)</p>
-<p>#—————————————–CHECK FOR NAs raw_data %&gt;% summarise_all(~ sum(is.na(.))) #is this because of ratings being disabled? raw_data %&gt;% filter(is.na(perc_likes)) %&gt;% group_by(ratings_disabled) %&gt;% summarize (count = n()) #it looks like that’s the case for al but 3 of them. Those are na due to not having any likes/dislikes so we will adjust the calculation slightly raw_data &lt;- raw_data %&gt;% mutate(perc_likes = ifelse(ratings_disabled == “FALSE” &amp; likes==0, 0, round(likes / (likes+dislikes), digits=2)*100))</p>
-<p>raw_data %&gt;% filter(is.na(perc_likes)) %&gt;% group_by(ratings_disabled) %&gt;% summarize (count = n()) #this error has been fixed now and NAs are only showing for those with ratings disabled</p>
-<p>#—————————————–CHECK FOR NAs raw_data %&gt;% summarise_all(~ sum(is.null(.))) #no issues here</p>
-<p>hour</p>
+<pre class="r"><code>#create data frame
+tweets=data.frame(time=tweets$created_at, text=tweets$text, sentiment=NA, postw=0, negtw=0, tottw=1)
+
+#Detect sentiment for each tweet
+for(i in 1:nrow(tweets)){
+
+  }
+}
+
+#remove tweets that qdap() cannot distinguish
+tweets=tweets[!is.nan(tweets$sentiment)&amp;!is.na(tweets$sentiment),]</code></pre>
 <p>further datasets</p>
-<p>#Knowing all these, these are the next steps I’d take (not part of current scope) #Collect some of the following public metrics: #subscribers (if made public) as they could explain #other social media profiles (high fan base could contribute to this engagement) #reshares (reddit, facebook, etc) #length of video #SEO quality (nice but possibily not as important) #Would also help to have the following private metrics: usually only the individual accounts have access to these #watch time and % of video watched (the importance and how this related to ads/revenue) - customer satisfaction #Other analyses to further depth from my analysis: #string search and read through comments to understand sentiment/reactions ##See which factors contributed the most, further indepth analyses on those by segments</p>
-<p>#Other uses, different scope: #Sentiment analysis in a variety of forms #Categorising YouTube videos based on their comments and statistics. #Training ML algorithms like RNNs to generate their own YouTube comments. #Analysing what factors affect how popular a YouTube video will be. #Statistical analysis over time.</p>
+</div>
+<div id="knowing-all-these-these-are-the-next-steps-id-take-not-part-of-current-scope" class="section level2">
+<h2>Knowing all these, these are the next steps I’d take (not part of current scope)</h2>
+<div id="collect-some-of-the-following-public-metrics" class="section level3">
+<h3>1) Collect some of the following public metrics:</h3>
+<ul>
+<li>subscribers (if made public) as they could explain</li>
+<li>other social media profiles (high fan base could contribute to this engagement)</li>
+<li>reshares (reddit, facebook, etc)</li>
+<li>length of video</li>
+<li>SEO quality (nice but possibily not as important) ### 2) Would also help to have the following private metrics: usually only the individual accounts have access to these</li>
+<li>watch time and % of video watched (the importance and how this related to ads/revenue)</li>
+<li>% click through rate</li>
+</ul>
+</div>
+</div>
+<div id="other-uses-for-this-dataset" class="section level2">
+<h2>Other uses for this dataset:</h2>
+<ul>
+<li>Sentiment analysis on the comment section</li>
+<li>Clustering analyses to analyse different types of videos</li>
+<li>Analysing what factors affect how popular a YouTube video will be</li>
+<li>Statistical analysis to understand which factors contributed to increased engagement (views/likes)</li>
+</ul>
 </div>
 </div>
 
