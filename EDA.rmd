@@ -1,13 +1,16 @@
+---
+output: 
+  html_document: 
+    highlight: pygments
+    theme: readable
+    title: "YouTube In-depth Trending Analysis"
+    toc: yes
+    toc_depth: 4
+    
+    fig_width: 6 
+    fig_height: 6
+---
 # YouTube Trending Videos
-
-## Table of contents:
- 1. Background
- 2. Data tidy
- 3. Analysis
-        3.1 Trending date
-                3.1.1 How many videos?
-        3.2 Views
-        
 
 # 1) Background
 
@@ -56,7 +59,7 @@ Since it displays this across hundreds of thousands of accounts, this makes it a
 # 2) Data import, tidying, cleaning
 
 The following packages were needed to produce the output:
-``` r
+``` {r results = "hide", warning = FALSE, message = FALSE}
 library(ggplot2)
 library(dplyr)
 library(lubridate)
@@ -77,7 +80,7 @@ If you'd like to skip the data importing, manipulating and cleaning, a csv file 
 
 ### 2.1. Import
 
-``` r
+``` {r results = "hide", warning = FALSE, message = FALSE}
 #get datasets for the countries we're interested in
 gb_data <- read_csv("~/DS/YouTube - EDA/Datasets/GBvideos.csv")
 us_data <- read_csv("~/DS/YouTube - EDA/Datasets/USvideos.csv")
@@ -89,9 +92,9 @@ us_data$country <- "US"
 ca_data$country <- "CA"
 
 #get category data
-us_cat_json <- fromJSON("~/DS/YouTube/US_category_id.json")
-gb_cat_json <- fromJSON("~/DS/YouTube/GB_category_id.json")
-ca_cat_json <- fromJSON("~/DS/YouTube/CA_category_id.json")
+us_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/US_category_id.json")
+gb_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/GB_category_id.json")
+ca_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/CA_category_id.json")
 summary(us_cat_json)
 
 #bind together
@@ -109,7 +112,7 @@ us_data <- merge(x = us_data, y = US_category, by = "category_id")
 gb_data <- merge(x = gb_data, y = GB_category, by = "category_id")
 ca_data <- merge(x = ca_data, y = CA_category, by = "category_id")
 
-#combine into one dataset and remove previous variables from memory to keep the environment clean
+#combine into one dataset and remove previous variables from memory
 raw_data <- as.data.table(rbind(gb_data, us_data, ca_data))
 
 rm(us_data, gb_data, ca_data)
@@ -120,12 +123,12 @@ rm(us_cat_json, gb_cat_json, ca_cat_json)
 
 ### 2.2. Clean and Tidy Data
 
-```r
+```{r}
 #I usually like to save a backup of the raw data to make it easier to revert changes so let's do that
 raw_data_backup <- raw_data
 
 #let's check the structure of the data
-str(raw_data)
+glimpse(raw_data)
 #we can spot a few class problems as well as add some additional columns
 
 #clean and format dates/times
@@ -193,7 +196,7 @@ At this point, there are a few columns that we need to look into further as I am
 * ratings_disabled
 * hour
 
-``` r
+``` {r}
 
 #comments_disabled
 table(raw_data$comments_disabled)
@@ -245,61 +248,220 @@ ratings_disabled <- raw_data %>%
 rm(ratings_disabled, comments_disabled_by_country)
 ```
 
-Part 2 Analysis
----------------
+# 3. Analysis
 
-If the Tweets from the UK has already been extracted and saved as 'tweets.csv', then start the project from there. Analyze the sentiment of the tweets using qdap package, each tweet is broken into sentences and fed to QDAP to perform sentiment analysis. QDAP returns a number which represent the sentiment of the text. A positive value represents positive sentiment and vice versa for negative value. The absolute value of the sentiment value represents the strength of the sentiment.
+## 3.1. Correlation
 
-``` r
-require(qdap)
-tweets=read.csv("tweets.csv", header = TRUE, stringsAsFactors = FALSE )
-#take a look at the first few lines of tweets
-head(tweets$text)
+Let's try and check and covariation between our main variables: 
+
+```{r}
+raw_data_corr<- raw_data %>% select(views,likes,dislikes, comment_count, days_diff)
+
+# Compute a correlation matrix
+corr <- round(cor(raw_data_corr), 2)
+corr
+
+{results = "hide"}
+# Compute a matrix of correlation p-values
+pmat <- cor_pmat(raw_data_corr)
+pmat
 ```
+Let's see what this looks like:
 
-    ## [1] "Used car recently added: #NISSAN #NAVARA only £5980 http://t.co/MYU4CFeG"                            
-    ## [2] "Hey Monday"                                                                                          
-    ## [3] "Horrible, horrible nightmare. Also, my alarm is a bastard."                                          
-    ## [4] "@BeeStrawbridge a day to disconnect and reconnect to what's important - an excellent idea. Thank you"
-    ## [5] "Used car recently added: #VOLKSWAGEN #GOLF only £695 http://t.co/lsGgIVEN"                           
-    ## [6] "http://t.co/whsQJLMQ"
-
-Here are the first few tweets of the day. Good, We spotted one negative(\#3) and one positive(\#4) tweets already
-
-``` r
-#create data frame
-tweets=data.frame(time=tweets$created_at, text=tweets$text, sentiment=NA, postw=0, negtw=0, tottw=1)
-
-#Detect sentiment for each tweet
-for(i in 1:nrow(tweets)){
-
-  }
-}
-
-#remove tweets that qdap() cannot distinguish
-tweets=tweets[!is.nan(tweets$sentiment)&!is.na(tweets$sentiment),]
+```{r}
+# Visualize the correlation matrix
+ggcorrplot(corr, method = "square", 
+           ggtheme = ggplot2::theme_minimal, 
+           title = "Correlation plot",
+           outline.col = "black",
+           colors = c("blue","white", "red"),
+           lab = TRUE,
+           digits = 2)
 ```
 
 
+### Key insights:
+* the highest correlation was between **views** and **likes **; however, as with all correlations, this does not explain which caused which
+* high correlation between  **likes ** and  **comment count **, meaning that people engaged a lot on the videos they liked *but*
+* there was also a high correlation between  **dislikes ** and  **comment count **, meaning people engaged in comments also on videos they disliked/controversial videos
 
- further datasets
- 
- 
- 
-## Knowing all these, these are the next steps I'd take (not part of current scope)
-### 1) Collect some of the following public metrics: 
-* subscribers (if made public) as they could explain
-* other social media profiles (high fan base could contribute to this engagement)
-* reshares (reddit, facebook, etc)
-* length of video
-* SEO quality (nice but possibily not as important)
-### 2) Would also help to have the following private metrics: usually only the individual accounts have access to these
-* watch time and % of video watched (the importance and how this related to ads/revenue)
-* % click through rate
 
+```r
+#remove variables
+rm(corr, pmat, raw_data_corr)
+```
+
+
+## 3.2. Views
+### **3.2.1. What do the overall stats look like for views?**
+
+
+```{r}
+
+#1. Let's have a look at the overall stats for the trending videos
+trending_summary <- raw_data %>%
+  select(country,video_id) %>%
+  group_by(country) %>%
+  summarize(count = n(),
+            unique = n_distinct(video_id))
+
+ggplot(trending_summary)+
+  geom_col(aes(country, count, fill = country), show.legend = FALSE)+
+  geom_line(aes(country,unique), group = 1, lwd = 4, col = "black", lty = 3)+
+  geom_label(aes(country, unique, label = unique), fill = "black", col = "white")+
+  annotate("text", x = 2.5, y = 7000, label = "Unique Trending Videos", angle = 7)+
+  labs(y = "Total Trending Videos",
+       x = "Country",
+       title = "CA has a significantly different profile where a significant part of videos only trend for one day")
+```
+
+
+### **2.2. Overall, what's the spread of views (in million) for those that reached trending**
+
+
+```{r}
+views_data <- raw_data %>%
+  select(country,video_id,views) %>%
+  group_by(country, video_id) %>%
+  summarize(count = n(),
+            unique = n_distinct(video_id),
+            views = max(views),
+            views_m_reached = floor(views/1000000),
+            views_rounded = round(views/1000000))
+
+#let's look at a basic spread
+summary(views_data$views_m_reached)
+#dive into more detail
+table(quantile(views_data$views_m_reached, probs = seq(0, 1, length.out=101)))
+#76% did not make it past 1 mil
+#only 5% go over the 5 million mark but not as detailed as we'd like so let's see by 1% increments
+quantile(views_data$views_m_reached, probs = seq(0, 1, length.out=101))
+#99% of the data is between 0 days from publish to trending and 18 days so we will use this 99th percentile as a max limit for our graphs
+max_limit <- quantile(views_data$views_m_reached, probs = c(0.99))
+
+ggplot(views_data, aes(views_m_reached, count))+
+  geom_col(fill="dark red")+
+  coord_cartesian(xlim=c(0,max_limit))+
+  labs(y = "Total Trending Videos",
+       x = "Views (millions)",
+       title = "Total Trending Videos by Views reached while Trending")+
+  theme_gray()+
+  geom_vline(xintercept=0.5, lwd = 1, col = "black", lty = 1)+
+  annotate("text", x = 0.7, y = 28000, label = "76% of data", angle = 90)+
+  geom_vline(xintercept=4.5, lwd = 1, col = "black", lty = 5)+
+  annotate("text", x = 4.7, y = 28000, label = "95% of data", angle = 90)+
+  geom_vline(xintercept=max_limit+0.5, lwd = 1, col = "black", lty = 2)+
+  annotate("text", x = max_limit-0.3+0.5, y = 28000, label = "99% of data", angle = 90)
+#less than 62% of videos ever reach 1m views and <5% go over 5m
+#only 1% go over 19m with the highest being 425m
+
+ggplot(views_data)+
+geom_bar(aes(views_m_reached, ..prop.., fill = country))+
+facet_grid(~country)+
+coord_cartesian(xlim=c(0,max_limit))+
+theme_gray()+
+labs(y = "% of Total Trending Videos",
+       x = "Views (millions)",
+       fill = "Country",
+       title = "% of Trending Videos by Views reached while Trending - Segmentation by Country")
+#switched to % view because there is a significant difference in volume betwee nthe countries. We can see a wider distirbution in GB and US vs CA
+```
+
+
+### **2.3. Because a significant part of the trending videos never reached 1m, it would be helpful to look at this subset in particular**
+
+```{r}
+views_data_below1m <- views_data %>%
+  filter (views_m_reached < 1)
+
+#Overall, what's the spread of views for those that reached trending with under 1m views
+ggplot(views_data_below1m, aes(views))+
+  geom_histogram(fill="dark red", binwidth = 10000)+
+  labs(y = "Total Trending Videos",
+       x = "Views",
+       title = "Total Trending Videos by Max Views (under 1 million) while Trending")+
+  theme_gray()
+#we can see that this group is skewed to the right - most videos tend to have up to 100,000 after which there's a steep decline
+
+#Segmentation by country
+ggplot(views_data_below1m)+
+  geom_histogram(aes(views, fill = country), binwidth = 10000)+
+  facet_grid(~country)+
+  theme_gray()+
+  labs(y = "Total Trending Videos",
+       x = "Views",
+       fill = "Country",
+       title = "Total Trending Videos by Max Views (under 1 million) while Trending - Segmentation by Country")
+#no significant differences between the three countries
+
+```
+
+
+### **3.2.4. Is a video required to trend for more than a day in order to get the best results?**
+```{r}
+views_by_video <- raw_data %>% 
+  select(video_id, views, country, trending_date) %>%
+  group_by(country, video_id, trending_date) %>%
+  summarize (views = max(views),
+             count = n()) %>%
+  group_by(country, video_id) %>%
+  summarize(views = max(views)/1000000,
+            count = n())
+
+count_by_days_trending <- views_by_video %>%
+    group_by(count) %>%
+    summarize(total_count = n())
+
+#quick summary of spread
+quantile(views_by_video$views)
+
+ggplot(views_by_video, aes(as.factor(count), views)) +
+  geom_boxplot(outlier.shape = NA, fill = "dark red", col = "black", size = 0.1)+
+  geom_smooth(aes())+
+  coord_cartesian(ylim = c(0, 80))+
+  labs(y = "Max Views (million)",
+       x = "Total Trending Days",
+       title = "The median tends to increase as the number of trending days increases")+
+  theme_gray()
+
+
+ggplot(count_by_days_trending, aes(count, total_count))+
+  geom_col(fill = "dark red")+
+  labs(y = "Number of Videos",
+       x = "Total Trending Days",
+       title = "The number of samples in each category decreases (much fewer have 30m views than 3m views) which means that the data can be skewed by outliers")
+
+#by country
+ggplot(views_by_video, aes(as.factor(count), views)) +
+  geom_boxplot(aes(fill = country), outlier.shape = NA, col = "black", size = 0.1)+
+  coord_cartesian(ylim = c(0, 100))+
+  scale_x_discrete(breaks = seq(0,38,5))+
+  labs(y = "Views (million)",
+       x = "Total Trending Days",
+       title = "Total Vies by amount of Trending Days")+
+  theme_gray()+
+  facet_wrap(~country)
+#same trend, except for the difference the amount of days a video is trending between the three countries that we previously covered
+ 
+#clear variables
+rm(views_by_video, views_data, views_data_below1m, views_summary, count_by_days_trending ,max_limit)
+```
+
+ 
+## Additional data fields that could help gain an even better understanding:
+1) Public Data: 
+* **Subscriber Count** (if made public) as they could be a significant contributor to views (especially soon after a video gets posted)
+* other **social media profiles** (high fan base could contribute to the engagement)
+* **Share Count** (on Facebook, Instagram, Reddit, etc)
+* **Video Length**
+* **Search Engine Optimisation**
+
+2) Private Data (only the creator can access these)
+* **Watch Time** and **% of Video Watched** (ie. if a video has a total length of 10 mins, what gets watched on average)
+* **% Click Through Rate** (ie. out of 100 people that see a video's thumbnail, what % clicks on it)
 
 ## Other uses for this dataset:
-* Sentiment analysis on the comment section
-* Clustering analyses to analyse different types of videos
-* Analysing what factors affect how popular a YouTube video will be
-* Statistical analysis to understand which factors contributed to increased engagement (views/likes)
+* **Sentiment** analysis on the comment section
+* **Clustering** analysis to analyse different types of videos
+* **Regression** analysis to see if we can predict how many views a video will get
+* **Statistical** analyses to understand which factors contributed to increased engagement

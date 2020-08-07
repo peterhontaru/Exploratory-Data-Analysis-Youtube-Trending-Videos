@@ -1,12 +1,17 @@
+---
+output: 
+  html_document: 
+    toc: yes
+---
 # YouTube Trending Videos
 
 ## Table of contents:
  1. Background
  2. Data tidy
  3. Analysis
-        3.1 Trending date
-                3.1.1 How many videos?
-        3.2 Views
+        + Trending date
+        ++ How many videos?
+        + Views
         
 
 # 1) Background
@@ -89,9 +94,9 @@ us_data$country <- "US"
 ca_data$country <- "CA"
 
 #get category data
-us_cat_json <- fromJSON("~/DS/YouTube/US_category_id.json")
-gb_cat_json <- fromJSON("~/DS/YouTube/GB_category_id.json")
-ca_cat_json <- fromJSON("~/DS/YouTube/CA_category_id.json")
+us_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/US_category_id.json")
+gb_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/GB_category_id.json")
+ca_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/CA_category_id.json")
 summary(us_cat_json)
 
 #bind together
@@ -109,7 +114,7 @@ us_data <- merge(x = us_data, y = US_category, by = "category_id")
 gb_data <- merge(x = gb_data, y = GB_category, by = "category_id")
 ca_data <- merge(x = ca_data, y = CA_category, by = "category_id")
 
-#combine into one dataset and remove previous variables from memory to keep the environment clean
+#combine into one dataset and remove previous variables from memory
 raw_data <- as.data.table(rbind(gb_data, us_data, ca_data))
 
 rm(us_data, gb_data, ca_data)
@@ -245,40 +250,43 @@ ratings_disabled <- raw_data %>%
 rm(ratings_disabled, comments_disabled_by_country)
 ```
 
-Part 2 Analysis
----------------
+# 3. Analysis
 
-If the Tweets from the UK has already been extracted and saved as 'tweets.csv', then start the project from there. Analyze the sentiment of the tweets using qdap package, each tweet is broken into sentences and fed to QDAP to perform sentiment analysis. QDAP returns a number which represent the sentiment of the text. A positive value represents positive sentiment and vice versa for negative value. The absolute value of the sentiment value represents the strength of the sentiment.
+Let's try and check and covariation between our main variables: 
 
-``` r
-require(qdap)
-tweets=read.csv("tweets.csv", header = TRUE, stringsAsFactors = FALSE )
-#take a look at the first few lines of tweets
-head(tweets$text)
+```r
+raw_data_corr<- raw_data %>% select(views,likes,dislikes, comment_count, days_diff)
+
+# Compute a correlation matrix
+corr <- round(cor(raw_data_corr), 2)
+corr
+
+# Compute a matrix of correlation p-values
+pmat <- cor_pmat(raw_data_corr)
+pmat
+```
+Let's see what this looks like:
+
+```{r - corrplot}
+# Visualize the correlation matrix
+ggcorrplot(corr, method = "square", 
+           ggtheme = ggplot2::theme_minimal, 
+           title = "Correlation plot",
+           outline.col = "black",
+           colors = c("blue","white", "red"),
+           lab = TRUE,
+           digits = 2)
 ```
 
-    ## [1] "Used car recently added: #NISSAN #NAVARA only £5980 http://t.co/MYU4CFeG"                            
-    ## [2] "Hey Monday"                                                                                          
-    ## [3] "Horrible, horrible nightmare. Also, my alarm is a bastard."                                          
-    ## [4] "@BeeStrawbridge a day to disconnect and reconnect to what's important - an excellent idea. Thank you"
-    ## [5] "Used car recently added: #VOLKSWAGEN #GOLF only £695 http://t.co/lsGgIVEN"                           
-    ## [6] "http://t.co/whsQJLMQ"
+#highest correlation between views and likes - however, as with all correlations, this does not explain which caused which
+#high correlation between likes and comment count, meaning that people engaged a lot on the videos they liked BUT
+#also high correlation between dislikes and comment count, meaning people engaged in comments also on videos they disliked/controversial videos
 
-Here are the first few tweets of the day. Good, We spotted one negative(\#3) and one positive(\#4) tweets already
+#remove variables
+rm(corr, pmat, raw_data_corr)
 
-``` r
-#create data frame
-tweets=data.frame(time=tweets$created_at, text=tweets$text, sentiment=NA, postw=0, negtw=0, tottw=1)
 
-#Detect sentiment for each tweet
-for(i in 1:nrow(tweets)){
 
-  }
-}
-
-#remove tweets that qdap() cannot distinguish
-tweets=tweets[!is.nan(tweets$sentiment)&!is.na(tweets$sentiment),]
-```
 
 
 

@@ -19,9 +19,9 @@ us_data$country <- "US"
 ca_data$country <- "CA"
 
 #get category data
-us_cat_json <- fromJSON("~/DS/YouTube/US_category_id.json")
-gb_cat_json <- fromJSON("~/DS/YouTube/GB_category_id.json")
-ca_cat_json <- fromJSON("~/DS/YouTube/CA_category_id.json")
+us_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/US_category_id.json")
+gb_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/GB_category_id.json")
+ca_cat_json <- fromJSON("~/DS/YouTube - EDA/Datasets/CA_category_id.json")
 summary(us_cat_json)
 
 #bind together
@@ -49,8 +49,11 @@ rm(us_cat_json, gb_cat_json, ca_cat_json)
 
 
 #-----------------------------------------------------------------------------------------------------CLEAN AND TIDY DATA
+#I usually like to save a backup of the raw data to make it easier to revert changes so let's do that
+raw_data_backup <- raw_data
+
 #let's check the structure of the data
-str(raw_data)
+glimpse(raw_data)
 #we can spot a few class problems as well as add some additional columns
 
 #clean and format dates/times
@@ -92,8 +95,26 @@ raw_data <- raw_data %>%
         
 rm(video_error_or_removed)
 
+#-----------------------------------------CHECK FOR NAs
+raw_data %>% summarise_all(~ sum(is.na(.)))
+#is this because of ratings being disabled?
+raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
+#it looks like that's the case for al but 3 of them. Those are na due to not having any likes/dislikes so we will adjust the calculation slightly
+raw_data <- raw_data %>% mutate(perc_likes = ifelse(ratings_disabled == "FALSE" & likes==0, 0, round(likes / (likes+dislikes), digits=2)*100))
 
-#other two interesting columns are comments/rating flags so need investigating
+raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
+#this error has been fixed now and NAs are only showing for those with ratings disabled
+
+#-----------------------------------------CHECK FOR NULLS
+raw_data %>% summarise_all(~ sum(is.null(.)))
+#no issues here
+
+#back up our existing data into raw_data_backup
+raw_data_backup <- raw_data
+
+
+
+#-----------------------------------------------------------------------------------------------------DATA UNDERSTANDING
 
 #comments_disabled
 table(raw_data$comments_disabled)
@@ -110,24 +131,6 @@ table(quantile(raw_data$ratings_disabled, probs = seq(0, 1, length.out=101)))
 #the dataset is before the rule with videos aimed to children will not be allowed comments so that's not a factor
 #however, they will be removed from engagement-specific analysis as non existent data (0s would act as outliers)
 
-
-#-----------------------------------------CHECK FOR NAs
-raw_data %>% summarise_all(~ sum(is.na(.)))
-#is this because of ratings being disabled?
-raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
-#it looks like that's the case for al but 3 of them. Those are na due to not having any likes/dislikes so we will adjust the calculation slightly
-raw_data <- raw_data %>% mutate(perc_likes = ifelse(ratings_disabled == "FALSE" & likes==0, 0, round(likes / (likes+dislikes), digits=2)*100))
-
-raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
-#this error has been fixed now and NAs are only showing for those with ratings disabled
-
-#-----------------------------------------CHECK FOR NAs
-raw_data %>% summarise_all(~ sum(is.null(.)))
-#no issues here
-
-
-#back up our existing data into raw_data_backup
-raw_data_backup <- raw_data
 
 #-----------------------------------------COMMENTS DISABLED ANALYSIS
 #1
@@ -147,7 +150,6 @@ ggplot(comments_disabled_by_country, aes(country, dislikes_perc , fill = comment
 
 #potentially some controversial videos choose to take comments down to avoid backlash (particularly in news and entertainment)
 #these look to be more dislikes, on average than likes (but sample size is also much smaller so exceptions are likely to skew data)
-
 
 
 #-----------------------------------------RATINGS DISABLED ANALYSIS
