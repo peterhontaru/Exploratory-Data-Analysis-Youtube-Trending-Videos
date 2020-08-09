@@ -12,10 +12,10 @@ output:
     fig_height: 6
     fig_align: "center"
     
-    code_folding: hide
+    code_folding: show
     
-    html_notebook: default
-    github_document: default
+  html_notebook: default
+  github_document: default
 ---
 # YouTube Trending Videos - Exploratory Data Analysis (EDA)
 
