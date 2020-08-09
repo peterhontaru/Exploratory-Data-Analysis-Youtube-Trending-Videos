@@ -1,21 +1,18 @@
 ---
-output: 
-  html_document: 
+    output: github_document
     highlight: pygments
     theme: readable
     title: "YouTube In-depth Trending Analysis"
     toc: yes
     toc_float: true
     toc_depth: 4
+    keep_md: true
     
     fig_width: 11 
     fig_height: 6
     fig_align: "center"
     
     code_folding: show
-    
-  html_notebook: default
-  github_document: default
 ---
 # YouTube Trending Videos - Exploratory Data Analysis (EDA)
 
