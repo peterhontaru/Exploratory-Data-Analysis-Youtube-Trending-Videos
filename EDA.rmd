@@ -5,16 +5,22 @@ output:
     theme: readable
     title: "YouTube In-depth Trending Analysis"
     toc: yes
+    toc_float: true
     toc_depth: 4
     
     fig_width: 11 
     fig_height: 6
     fig_align: "center"
+    
+    code_folding: hide
+    
+    html_notebook: default
+    github_document: default
 ---
 # YouTube Trending Videos - Exploratory Data Analysis (EDA)
 
 
-# 1) Background
+# 1. Background
 
 
 ### Why this dataset?
@@ -53,8 +59,8 @@ Since it shows this feed to hundreds of thousands of accounts, it serves as a gr
 
 
 ## Dataset information:
-* Trending data between "2017-11-14" and "2018-06-14" for US, CA and GB
-* Contains > 120,000 videos information in the tree countries
+* Contains >120,000 videos across three countries
+* 8 months of Daily Trending data between "2017-11-14" and "2018-06-14" for US, CA and GB
 
 
 #videos by day                    #total videos
@@ -62,7 +68,7 @@ Since it shows this feed to hundreds of thousands of accounts, it serves as a gr
 
 
 
-# 2) Data import, tidying, cleaning
+# 2. Data import, tidying, cleaning
 
 The following packages were needed to produce the output:
 ``` {r results = "hide", warning = FALSE, message = FALSE}
@@ -828,18 +834,19 @@ ggplot(raw_data_eng) +
 ```
 
 
-# 4) Summary: to reiterate, we now have good understanding on 
+# 4. Summary: to reiterate, we now have good understanding on 
 * a) the dataset in question
 * b) the main differences in the three English-speaking countries
 
 
 ## Key points:
+* 1
 
  
-# 5) Further analysis:
+# 5. Further analysis:
  
 ## Additional data fields that could help gain an even better understanding:
-#### 1) Public Data: 
+#### a) Public Data: 
 * **Subscriber Count** (if made public) as they could be a significant contributor to views (especially soon after a video gets posted)
 * other **social media profiles** (high fan base could contribute to the engagement)
 * **Share Count** (on Facebook, Instagram, Reddit, etc)
@@ -847,7 +854,7 @@ ggplot(raw_data_eng) +
 * **Search Engine Optimisation**
 * The documentation around the **timezone** was incomplete so the **hour** field was dropped from the analysis
 
-#### 2) Private Data (only the creator can access these)
+#### b) Private Data (only the creator can access these)
 * **Watch Time** and **% of Video Watched** (ie. if a video has a total length of 10 mins, what gets watched on average)
 * **% Click Through Rate** (ie. out of 100 people that see a video's thumbnail, what % clicks on it)
 
