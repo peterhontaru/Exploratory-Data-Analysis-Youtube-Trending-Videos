@@ -1,21 +1,23 @@
 ---
-    output: github_document
+    output:
+      html_document:
+        keep_md: true
+        toc: true
+        toc_float: true
+        toc_depth: 3 
+    
     highlight: pygments
     theme: readable
-    title: "YouTube In-depth Trending Analysis"
-    toc: yes
-    toc_float: true
-    toc_depth: 4
-    keep_md: true
     
-    fig_width: 11 
+    title: "YouTube Trending Videos"
+    subtitle: "In-depth Exploratory Data Analysis (EDA)"
+
+    fig_width: 14 
     fig_height: 6
     fig_align: "center"
     
     code_folding: show
 ---
-# YouTube Trending Videos - Exploratory Data Analysis (EDA)
-
 
 # 1. Background
 
@@ -302,13 +304,13 @@ ggcorrplot(corr, method = "square",
 
 
 ### Key insights: *(remember to not confuse correlation with causation)*
-* the highest correlation was between **views** and **likes **
-* high correlation between  **likes ** and  **comment count **, meaning that people engaged a lot on the videos they liked *but*
-* there was also a high correlation between  **dislikes ** and  **comment count **, meaning people also engaged in comments on videos they disliked
+* the highest correlation was between **views** and **likes**
+* high correlation between  **likes ** and  **comment count**, meaning that people engaged a lot on the videos they liked *but*
+* there was also a high correlation between  **dislikes ** and  **comment count**, meaning people also engaged in comments on videos they disliked
 * together, these two **could** mean people found it easier to **like/dislike** a video once they commented (or the other way around)
 
 
-## 3.2. Views
+## 3.2. Trending Date
 ### 3.2.1. What do the overall stats look like based on the Trending Date?
 
 
@@ -770,7 +772,6 @@ ggplot(raw_data_eng) +
   geom_bar(aes(reorder(category_title, perc_dislikes), perc_dislikes, fill = category_title), stat = "identity") +
   geom_line(aes(reorder(category_title, perc_dislikes), views), group = 1, lwd = 1, lty = 3) +
   facet_grid(~country) +
-  theme_grey() +
   theme(legend.position = "none") + 
   labs(y = "% dislikes",
        x = NULL,
@@ -807,7 +808,6 @@ raw_data_eng_detail <- raw_data %>%
 ggplot(raw_data_eng_detail) + 
   geom_boxplot(aes(reorder(category_title, dislikes), perc_dislikes, fill = category_title), outlier.alpha = 0.1, outlier.colour = "grey45") +
   facet_grid(~country) +
-  theme_grey() +
   theme(legend.position = "none") + 
   coord_flip()+
   labs(title="There are some videos in the News & Politics, Entertainment and People&Blogs that attract a disproportionately high % of dislikes", 
@@ -823,7 +823,6 @@ ggplot(raw_data_eng_detail) +
 ggplot(raw_data_eng) + 
   geom_col(aes(country, perc_dislikes, fill = country)) +
   facet_wrap(~category_title, as.table = FALSE) +
-  theme_grey() +
   theme(legend.position = "none") + 
   labs(y = "% Dislikes",
        x = NULL,
