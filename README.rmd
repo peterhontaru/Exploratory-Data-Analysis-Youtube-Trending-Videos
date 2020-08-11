@@ -2,9 +2,6 @@
     output:
       github_document:
 
-    highlight: pygments
-    theme: readable
-    
     title: "YouTube Trending Videos"
     subtitle: "In-depth Exploratory Data Analysis (EDA)"
 
@@ -43,13 +40,29 @@ Trending videos work alongside the home page to provide users with content to wa
 * Those that are generally interested in YouTube
 
 
-### Key Insights:
-* CA tends to have videos that only trend for a very short period, while in the GB/US they typically trend significantly longer (up to 38 days)
-* bla bla
-* bla bla bla
-
-
 ### Dataset information:
 * Contains >120,000 videos across three countries (Canada, Great Britain, United States of America)
 * 8 months of Daily Trending data between "2017-11-14" and "2018-06-14" (approx 200 videos/day/country)
 * All the data is downloaded from <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are available within the "Datasets" folder*
+
+
+# 2. Key Insights:
+
+
+### Correlation plot:
+![YouTube Trending Page](Exploratory-Data-Analysis_files\figure-gfm\1 - Correlation Plot-1.png)
+
+![YouTube Trending Page](Exploratory-Data-Analysis_files\figure-gfm\2 - overall videos by country-1.png)
+
+![YouTube Trending Page](Exploratory-Data-Analysis_files\figure-gfm\3 - Trending Days Timespan-1.png)
+
+![YouTube Trending Page](Exploratory-Data-Analysis_files\figure-gfm\4- View Spread-1.png)
+
+![YouTube Trending Page](Exploratory-Data-Analysis_files\figure-gfm\5 - Views by Category-1.png)
+
+# 3. Full project
+Full analysis available:
+
+* in the **Exploratory-Data-Analysis.md** of this repo 
+* at the following [link](https://github.com/peterhontaru/YouTube-Trending-Videos-EDA/blob/master/Exploratory-Data-Analysis.md)
+

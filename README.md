@@ -39,14 +39,6 @@ and then further refine these questions based on what was discovered.*
     R (for beginners) or see other people’s analyses (for intermediates)
   - Those that are generally interested in YouTube
 
-### Key Insights:
-
-  - CA tends to have videos that only trend for a very short period,
-    while in the GB/US they typically trend significantly longer (up to
-    38 days)
-  - bla bla
-  - bla bla bla
-
 ### Dataset information:
 
   - Contains \>120,000 videos across three countries (Canada, Great
@@ -56,3 +48,30 @@ and then further refine these questions based on what was discovered.*
   - All the data is downloaded from
     <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are
     available within the “Datasets” folder*
+
+# 2\. Key Insights:
+
+### Correlation plot:
+
+![YouTube Trending
+Page](Exploratory-Data-Analysis_files\\figure-gfm\\1%20-%20Correlation%20Plot-1.png)
+
+![YouTube Trending
+Page](Exploratory-Data-Analysis_files\\figure-gfm\\2%20-%20overall%20videos%20by%20country-1.png)
+
+![YouTube Trending
+Page](Exploratory-Data-Analysis_files\\figure-gfm\\3%20-%20Trending%20Days%20Timespan-1.png)
+
+![YouTube Trending
+Page](Exploratory-Data-Analysis_files\\figure-gfm\\4-%20View%20Spread-1.png)
+
+![YouTube Trending
+Page](Exploratory-Data-Analysis_files\\figure-gfm\\5%20-%20Views%20by%20Category-1.png)
+
+# 3\. Full project
+
+Full analysis available:
+
+  - in the **Exploratory-Data-Analysis.md** of this repo
+  - at the following
+    [link](https://github.com/peterhontaru/YouTube-Trending-Videos-EDA/blob/master/Exploratory-Data-Analysis.md)

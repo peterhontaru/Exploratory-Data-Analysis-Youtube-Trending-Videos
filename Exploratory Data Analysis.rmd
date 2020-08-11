@@ -45,16 +45,20 @@ Trending videos work alongside the home page to provide users with content to wa
 * Those that are generally interested in YouTube
 
 
-### Key Insights:
-* CA tends to have videos that only trend for a very short period, while in the GB/US they typically trend significantly longer (up to 38 days)
-* bla bla
-* bla bla bla
-
-
 ### Dataset information:
+
 * Contains >120,000 videos across three countries (Canada, Great Britain, United States of America)
 * 8 months of Daily Trending data between "2017-11-14" and "2018-06-14" (approx 200 videos/day/country)
 * All the data is downloaded from <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are available within the "Datasets" folder*
+
+
+### Key Insights:
+
+* Canada has a significantly different profile as it regards unique videos that were trending (60%) versus Great Britain (8%) and The United States of America (16%)
+* Most videos (80%) in CA only trend for 1-2 days versus GB and US where it isn't uncommon to trend for up to 10 days (highest 38 days)
+* Only 25% of all videos receive over 1 million views and 5% receive over 5 million
+* Music and Entertainment are the most predominant categories
+* News&Politics is the most controversial category (as judged by % of dislikes), while Pets&Animals and Comedy are the least disliked
 
 
 # 2. Data import, tidying, cleaning
