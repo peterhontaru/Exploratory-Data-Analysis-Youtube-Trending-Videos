@@ -53,18 +53,17 @@ and then further refine these questions based on what was discovered.*
 
 ### Correlation plot:
 
-![YouTube Trending
-Page](_support%20files\\1%20-%20Correlation%20Plot-1.png)
+![Correlation](_support%20files/1%20-%20Correlation%20Plot-1.png)
 
-![YouTube Trending
-Page](_support%20files\\2%20-%20overall%20videos%20by%20country-1.png)
+![Overall
+stats](_support%20files/2%20-%20overall%20videos%20by%20country-1.png)
 
-![YouTube Trending
-Page](_support%20files\\3%20-%20Trending%20Days%20Timespan-1.png)
+![Max Trending
+Days](_support%20files/3%20-%20Trending%20Days%20Timespan-1.png)
 
-![Views](_support%20files\\4-%20View%20Spread-1.png)
+![Views](_support%20files/4-%20View%20Spread-1.png)
 
-![Category](_support%20files\\5%20-%20Views%20by%20Category-1.png)
+![Category](_support%20files/Views%20by%20Category.png)
 
 # 3\. Full project
 
