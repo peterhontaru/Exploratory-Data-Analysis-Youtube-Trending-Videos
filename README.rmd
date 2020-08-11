@@ -58,7 +58,7 @@ Trending videos work alongside the home page to provide users with content to wa
 
 ![Views](_support files/4- View Spread-1.png)
 
-![Category](_support files/Views by Category.png)
+![Category](_support files/5 - Views by Category-1.png)
 
 # 3. Full project
 Full analysis available:

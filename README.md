@@ -63,7 +63,7 @@ Days](_support%20files/3%20-%20Trending%20Days%20Timespan-1.png)
 
 ![Views](_support%20files/4-%20View%20Spread-1.png)
 
-![Category](_support%20files/Views%20by%20Category.png)
+![Category](_support%20files/5%20-%20Views%20by%20Category-1.png)
 
 # 3\. Full project
 
