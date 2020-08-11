@@ -56,9 +56,9 @@ Trending videos work alongside the home page to provide users with content to wa
 
 ![YouTube Trending Page](_support files\3 - Trending Days Timespan-1.png)
 
-![YouTube Trending Page](_support files\4- View Spread-1.png)
+![Views](_support files\4- View Spread-1.png)
 
-![YouTube Trending Page](_support files\5 - Views by Category-1.png)
+![Category](_support files\5 - Views by Category-1.png)
 
 # 3. Full project
 Full analysis available:
