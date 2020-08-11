@@ -11,18 +11,18 @@ YouTube Trending Videos
       - [Dataset information:](#dataset-information)
   - [2. Data import, tidying, cleaning](#data-import-tidying-cleaning)
       - [2.1. Import](#import)
-      - [2.2. Clean and Tidy Data](#clean-and-tidy-data)
+      - [2.2. Clean and tidy data](#clean-and-tidy-data)
   - [3. Analysis](#analysis)
       - [3.1. Correlation](#correlation)
           - [Key insights from the correlation
             analysis:](#key-insights-from-the-correlation-analysis)
       - [3.2. Trending Date](#trending-date)
           - [3.2.1. What do the overall stats look like based on the
-            Trending
-            Date?](#what-do-the-overall-stats-look-like-based-on-the-trending-date)
+            trending
+            date?](#what-do-the-overall-stats-look-like-based-on-the-trending-date)
           - [3.2.2. How long does a video typically trend
             for?](#how-long-does-a-video-typically-trend-for)
-          - [3.2.3. How long does it take for a video to become Trending
+          - [3.2.3. How long does it take for a video to become trending
             for the first
             time?](#how-long-does-it-take-for-a-video-to-become-trending-for-the-first-time)
           - [3.2.4. Are there any differences in the amount of videos
@@ -35,7 +35,7 @@ YouTube Trending Videos
             reached trending (in
             millions)?](#overall-whats-the-spread-of-views-for-those-that-reached-trending-in-millions)
           - [3.3.3. What does the profile look like for the majority of
-            the videos that never reached the 1m Views
+            the videos that never reached the 1m views
             mark?](#what-does-the-profile-look-like-for-the-majority-of-the-videos-that-never-reached-the-1m-views-mark)
           - [3.3.4. Is a video required to trend for more than a day in
             order to get the best
@@ -45,7 +45,7 @@ YouTube Trending Videos
             videos that made it on the trending
             page?](#how-do-categories-differ-in-terms-of-the-amount-of-videos-that-made-it-on-the-trending-page)
           - [3.4.2. How do categories differ in terms of
-            Views?](#how-do-categories-differ-in-terms-of-views)
+            views?](#how-do-categories-differ-in-terms-of-views)
           - [3.4.3. What does the spread of views within each category
             look
             like?](#what-does-the-spread-of-views-within-each-category-look-like)
@@ -106,13 +106,11 @@ and then further refine these questions based on what was discovered.*
 
 ### Key Insights:
 
-  - 1)  CA tends to have videos that only trend for a very short period,
-        while in the GB/US they typically trend significantly longer (up
-        to 38 days)
-
-  - 2)  bla bla
-
-  - 3)  bla bla bla
+  - CA tends to have videos that only trend for a very short period,
+    while in the GB/US they typically trend significantly longer (up to
+    38 days)
+  - bla bla
+  - bla bla bla
 
 ### Dataset information:
 
@@ -131,46 +129,14 @@ The following packages were needed to produce the output:
 ``` r
 library(ggplot2)
 library(dplyr)
-```
-
-    ## Warning: package 'dplyr' was built under R version 3.6.3
-
-``` r
 library(lubridate)
-```
-
-    ## Warning: package 'lubridate' was built under R version 3.6.2
-
-``` r
 library(data.table)
-```
-
-    ## Warning: package 'data.table' was built under R version 3.6.2
-
-``` r
 library(readr)
-```
-
-    ## Warning: package 'readr' was built under R version 3.6.2
-
-``` r
 library(rjson)
 library(jsonlite)
-```
-
-    ## Warning: package 'jsonlite' was built under R version 3.6.2
-
-``` r
 library(ggcorrplot)
-```
-
-    ## Warning: package 'ggcorrplot' was built under R version 3.6.3
-
-``` r
 library(knitr)
 ```
-
-    ## Warning: package 'knitr' was built under R version 3.6.3
 
 ### 2.1. Import
 
@@ -215,7 +181,7 @@ rm(US_category, GB_category, CA_category)
 rm(us_cat_json, gb_cat_json, ca_cat_json)
 ```
 
-### 2.2. Clean and Tidy Data
+### 2.2. Clean and tidy data
 
 ``` r
 #I usually like to save a backup of the raw data to make it easier to revert changes (if needed) so let's do that
@@ -414,7 +380,7 @@ pmat <- cor_pmat(raw_data_corr)
 
 ``` r
 knitr::kable(pmat, 
-             caption = "Matrix of correlation p-values",
+             caption = "Fig 1 - Matrix of correlation p-values",
              digits = 3)
 ```
 
@@ -426,7 +392,7 @@ knitr::kable(pmat,
 | comment\_count | 0.000 |     0 |    0.000 |              0 |      0.000 |
 | days\_diff     | 0.093 |     0 |    0.086 |              0 |      0.000 |
 
-Matrix of correlation p-values
+Fig 1 - Matrix of correlation p-values
 
 Let’s visualise our correlation output:
 
@@ -459,7 +425,7 @@ ggcorrplot(corr, method = "square",
 
 ## 3.2. Trending Date
 
-### 3.2.1. What do the overall stats look like based on the Trending Date?
+### 3.2.1. What do the overall stats look like based on the trending date?
 
 ``` r
 #set up overall dataset
@@ -475,7 +441,7 @@ ggplot(trending_summary)+
   geom_label(aes(country, unique, label = paste(round(unique/count*100), "% unique", sep = "")), fill = "black", col = "white")+
   labs(y = "Total Trending Videos",
        x = NULL,
-       title = "Despite a similar number of Total Trending Videos, CA has a different \nprofile to GB and US with considerably more unique videos")
+       title = "Despite a similar number of total trending videos, CA has a different \nprofile to GB and US with considerably more unique videos")
 ```
 
 ![](Exploratory-Data-Analysis_files/figure-gfm/2%20-%20overall%20videos%20by%20country-1.png)<!-- -->
@@ -492,6 +458,7 @@ trending_duration <- raw_data %>%
 ggplot(trending_duration, aes(count, ..prop.., fill = country))+
   geom_bar()+
   facet_grid(.~country)+
+  theme(legend.position = "none") + 
   labs(y = "% of Unique Trending Videos",
        x = "Max Trending Days",
        fill = "Country",
@@ -501,7 +468,7 @@ ggplot(trending_duration, aes(count, ..prop.., fill = country))+
 
 ![](Exploratory-Data-Analysis_files/figure-gfm/3%20-%20Trending%20Days%20Timespan-1.png)<!-- -->
 
-### 3.2.3. How long does it take for a video to become Trending for the first time?
+### 3.2.3. How long does it take for a video to become trending for the first time?
 
 ``` r
 #create a new dataset to help answer this question
@@ -557,7 +524,7 @@ ggplot(trending_data, aes(as.factor(days_diff), count))+
   labs(y = "Unique Trending Videos",
        x = "Days Until Trending",
        title = "~75% of videos became trending within their first day and ~95% took < 5 days",
-       subtitle = "It is unlikely for a video to reach the Trending Page if it hasn't done so within the first 10 days")
+       subtitle = "It is unlikely for a video to reach the trending page if it hasn't done so within the first 10 days")
 ```
 
 ![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
@@ -570,6 +537,7 @@ ggplot(trending_data, aes(days_diff, count, fill = country))+
   geom_col()+
   coord_cartesian(xlim=c(0,max_limit))+ #zooming in on the area of interest (99% of the data)
   facet_grid(.~country)+
+  theme(legend.position = "none") + 
   labs(y = "Unique Trending Videos",
        x = "Days Until Trending",
        fill = "Country",
@@ -623,8 +591,8 @@ ggplot(views_summary)+
   theme(legend.position = "none") + 
   annotate("text", x = 2.7, y = 7.35, label = "Unique Trending Videos (thousands)", angle = 14, lwd = 4.5)+
   labs(y = "Total Views (billions)",
-       x = "Country",
-       title = "CA leads in Total Views (8x more unique videos than GB and 4x more than US) \nGB has more Views than US, despite having ~50% fewer videos")
+       x = NULL,
+       title = "CA leads in total views (8x more unique videos than GB and 4x more than US) \nGB has more Views than US, despite having ~50% fewer videos")
 ```
 
 ![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
@@ -688,7 +656,7 @@ ggplot(views_data, aes(views_m_reached, count))+
   coord_cartesian(xlim=c(0,max_limit))+
   labs(y = "Unique Trending Videos",
        x = "Views (millions)",
-       title = "Only ~25% of videos receive more than 1 million Views \nMost (~95%) of the videos haven't reached the 5m View Count")+
+       title = "Only ~25% of videos receive more than 1 million views \nMost (~95%) of the videos haven't reached the 5m view count")+
   geom_vline(xintercept=0.51, lwd = 1, col = "black", lty = 1)+
   annotate("text", x = 0.8, y = 29000, label = "76% of data", angle = 90)+
   geom_vline(xintercept=4.5, lwd = 1, col = "black", lty = 5)+
@@ -718,7 +686,7 @@ labs(y = "% of Unique Trending Videos",
 
 ![](Exploratory-Data-Analysis_files/figure-gfm/Views%20Spready%20By%20Country-1.png)<!-- -->
 
-### 3.3.3. What does the profile look like for the majority of the videos that never reached the 1m Views mark?
+### 3.3.3. What does the profile look like for the majority of the videos that never reached the 1m views mark?
 
 ``` r
 #let's adapt the dataset to only include the videos that never reached 1m views
@@ -774,8 +742,8 @@ ggplot(views_by_video, aes(as.factor(count), views)) +
   coord_cartesian(ylim = c(0, 80))+
   labs(y = "Max views (million)",
        x = "Total Trending Days",
-       title = "The longer a video trends for, the more views it accumulates (excludes outliers)",
-       subtitle = "However, the sample size decreases significantly with each increase in Total Trending Days")
+       title = "The longer a video trends, the more views it accumulates (excludes outliers)",
+       subtitle = "However, the sample size decreases significantly with each increase in total trending days")
 ```
 
 ![](Exploratory-Data-Analysis_files/figure-gfm/Views%20by%20Trending%20day%20count-1.png)<!-- -->
@@ -788,7 +756,7 @@ ggplot(views_by_video, aes(as.factor(count), views)) +
   coord_cartesian(ylim = c(0, 100))+
   scale_x_discrete(breaks = seq(0,38,5))+
   theme(legend.position = "none") + 
-  labs(y = "Max views (million)",
+  labs(y = "Max Views (million)",
        x = "Total Trending Days",
        title = "Irrespective of Country, the longer a video trends, the more views it gets",
        subtitle = "However, it's hard to compare this trend across countries due to different sample sizes")+
@@ -827,7 +795,7 @@ ggplot(raw_data_cat, aes(x=reorder(category_title, count), y = count, fill = cat
 
 ![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
 
-### 3.4.2. How do categories differ in terms of Views?
+### 3.4.2. How do categories differ in terms of views?
 
 ``` r
 ggplot(raw_data_cat) + 
@@ -837,7 +805,7 @@ ggplot(raw_data_cat) +
   theme(legend.position = "none") + 
   labs(y = "Number of Views (millions)",
        x = NULL,
-       title = "In the GB, there is a significantly higher number of views within Music \nthan Entertainment, despite a comparable unique video count",
+       title = "In GB, there is a significantly higher number of views within Music \nthan Entertainment, despite a comparable unique video count",
        subtitle = "Bar chart - Total Video Count \nLine chart - Unique Video Count")+
   coord_flip()
 ```
@@ -908,7 +876,7 @@ ggplot(raw_data_eng_overall) +
   geom_line(aes(country, perc_engagement), group = 1, lwd = 1, lty = 3) +
   theme(legend.position = "none") + 
   labs(y = "% dislikes / % engagement",
-       x = "Country",
+       x = NULL,
        title = "GB has a higher % of dislikes and lower overall engagement",
        subtitle = "Bar chart - % of Dislikes ( Dislikes / ( Likes + Dislikes ) ); \nDotted Line chart - % engagement ( ( Likes + Dislikes + Comments ) / Views )")
 ```
@@ -945,7 +913,7 @@ ggplot(raw_data_eng) +
   theme(legend.position = "none") + 
   labs(y = "% dislikes",
        x = NULL,
-       title = "The most disliked categories are News&Politics and Entertainment \nThe most liked categories were Comedy and Pets&Animals",
+       title = "The most disliked categories: News&Politics and Entertainment \nThe most liked categories: Comedy and Pets&Animals",
        subtitle = "Dotted line indicates unique videos across each category")+
   coord_flip()
 ```
