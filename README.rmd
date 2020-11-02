@@ -2,8 +2,9 @@
     output:
       github_document:
 
-    title: "YouTube Trending Videos"
-    subtitle: "In-depth Exploratory Data Analysis (EDA)"
+    title: "Exploratory Data Analysis - Youtube Trending Videos"
+    subtitle: "Same language, different viewership habits? Here's what 120,000+ videos show." 
+    author: "by Peter Hontaru"
 
     fig_width: 15 
     fig_height: 6
@@ -64,5 +65,5 @@ Trending videos work alongside the home page to provide users with content to wa
 Full analysis available:
 
 * in the **Exploratory-Data-Analysis.md** of this repo 
-* at the following [link](https://github.com/peterhontaru/YouTube-Trending-Videos-EDA/blob/master/Exploratory-Data-Analysis.md)
+* at the following [link](http://htmlpreview.github.io/?https://github.com/peterhontaru/Exploratory-Data-Analysis-Youtube-Trending-Videos/blob/master/Exploratory-Data-Analysis.html)
 

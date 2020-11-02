@@ -1,5 +1,6 @@
-YouTube Trending Videos
+Exploratory Data Analysis - Youtube Trending Videos
 ================
+by Peter Hontaru
 
 # 1\. Background
 
@@ -71,4 +72,4 @@ Full analysis available:
 
   - in the **Exploratory-Data-Analysis.md** of this repo
   - at the following
-    [link](https://github.com/peterhontaru/YouTube-Trending-Videos-EDA/blob/master/Exploratory-Data-Analysis.md)
+    [link](http://htmlpreview.github.io/?https://github.com/peterhontaru/Exploratory-Data-Analysis-Youtube-Trending-Videos/blob/master/Exploratory-Data-Analysis.html)

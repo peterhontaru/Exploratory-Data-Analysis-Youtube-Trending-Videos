@@ -1,137 +1,96 @@
-YouTube Trending Videos
-================
+---
+    output:
+      html_document:
+              
+        toc: true
+        toc_float: false
+        toc_depth: 3
+        number_sections: true
+        
+        code_folding: hide
+        code_download: true
+        
+        fig_width: 9 
+        fig_height: 5
+        fig_align: "center"
+        
+        highlight: pygments
+        theme: cerulean
+        
+        keep_md: true
+        
+    title: "Exploratory Data Analysis - Youtube Trending Videos"
+    subtitle: "Same language, different viewership habits? Here's what 120,000+ videos show." 
+    author: "by Peter Hontaru"
+---
 
-  - [1. Background](#background)
-      - [Why this dataset?](#why-this-dataset)
-      - [What are Trending Videos and why are they
-        important?](#what-are-trending-videos-and-why-are-they-important)
-      - [Purpose of this analysis:](#purpose-of-this-analysis)
-      - [To whom might this be helpful?](#to-whom-might-this-be-helpful)
-      - [Dataset information:](#dataset-information)
-      - [Key Insights:](#key-insights)
-  - [2. Data import, tidying, cleaning](#data-import-tidying-cleaning)
-      - [2.1. Import](#import)
-      - [2.2. Clean and tidy data](#clean-and-tidy-data)
-  - [3. Analysis](#analysis)
-      - [3.1. Correlation](#correlation)
-          - [Key insights from the correlation
-            analysis:](#key-insights-from-the-correlation-analysis)
-      - [3.2. Trending Date](#trending-date)
-          - [3.2.1. What do the overall stats look like based on the
-            trending
-            date?](#what-do-the-overall-stats-look-like-based-on-the-trending-date)
-          - [3.2.2. How long does a video typically trend
-            for?](#how-long-does-a-video-typically-trend-for)
-          - [3.2.3. How long does it take for a video to become trending
-            for the first
-            time?](#how-long-does-it-take-for-a-video-to-become-trending-for-the-first-time)
-          - [3.2.4. Are there any differences in the amount of videos
-            that trended each
-            month?](#are-there-any-differences-in-the-amount-of-videos-that-trended-each-month)
-      - [3.3. Views](#views)
-          - [3.3.1. What do the overall stats look like for
-            views?](#what-do-the-overall-stats-look-like-for-views)
-          - [3.3.2. Overall, what’s the spread of views for those that
-            reached trending (in
-            millions)?](#overall-whats-the-spread-of-views-for-those-that-reached-trending-in-millions)
-          - [3.3.3. What does the profile look like for the majority of
-            the videos that never reached the 1m views
-            mark?](#what-does-the-profile-look-like-for-the-majority-of-the-videos-that-never-reached-the-1m-views-mark)
-          - [3.3.4. Is a video required to trend for more than a day in
-            order to get the best
-            results?](#is-a-video-required-to-trend-for-more-than-a-day-in-order-to-get-the-best-results)
-      - [3.4. Category](#category)
-          - [3.4.1. How do categories differ in terms of the amount of
-            videos that made it on the trending
-            page?](#how-do-categories-differ-in-terms-of-the-amount-of-videos-that-made-it-on-the-trending-page)
-          - [3.4.2. How do categories differ in terms of
-            views?](#how-do-categories-differ-in-terms-of-views)
-          - [3.4.3. What does the spread of views within each category
-            look
-            like?](#what-does-the-spread-of-views-within-each-category-look-like)
-      - [3.5. Engagement](#engagement)
-          - [3.5.1. General stats by country](#general-stats-by-country)
-          - [3.5.2. What are the most/least controversial
-            categories?](#what-are-the-mostleast-controversial-categories)
-          - [3.5.3. How do the countries differ based on the spread of
-            the % of
-            dislikes?](#how-do-the-countries-differ-based-on-the-spread-of-the-of-dislikes)
-          - [3.5.4. How do the countries differ based on the % of videos
-            disliked?](#how-do-the-countries-differ-based-on-the-of-videos-disliked)
-  - [4. Further analysis:](#further-analysis)
-      - [Additional data fields that could provide an even better
-        understanding:](#additional-data-fields-that-could-provide-an-even-better-understanding)
-          - [a) Public Data:](#a-public-data)
-          - [b) Private Data (only the creator can access
-            these)](#b-private-data-only-the-creator-can-access-these)
-      - [Other uses for this dataset:](#other-uses-for-this-dataset)
 
-# 1\. Background
+
+```r
+knitr::opts_chunk$set(
+    echo = TRUE, # show all code
+    tidy = FALSE, # cleaner code printing
+    size = "small", # smaller code
+    
+    fig.path = "figures/",# where the figures will end up
+    out.width = "100%",
+
+    #results = "hide",
+    message = FALSE,
+    warning = FALSE
+    )
+```
+
+
+# Background
+
 
 ### Why this dataset?
+YouTube has been an influential source of knowledge both in my professional life as well in my personal goals/ambitions. Thus, I thought it would be interesting to **explore** this dataset, gather **insights** and understand the more about the platform.
 
-YouTube has been an influential source of knowledge both in my
-professional life as well in my personal goals/ambitions. Thus, I
-thought it would be interesting to **explore** this dataset, gather
-**insights** and understand the more about the platform.
 
-### What are Trending Videos and why are they important?
+### What are Trending Videos and why are they important? 
+Trending videos work alongside the home page to provide users with content to watch. While the home page is **highly personalised** (via the YouTube algorithm) on previous views, what the user watched longest, engagement, subscriptions, the trending page is **very broad and identical across all accounts**. Since it shows this feed to hundreds of thousands of accounts, it serves as a great source of views for content creators (think viral videos).
 
-Trending videos work alongside the home page to provide users with
-content to watch. While the home page is **highly personalised** (via
-the YouTube algorithm) on previous views, what the user watched longest,
-engagement, subscriptions, the trending page is **very broad and
-identical across all accounts**. Since it shows this feed to hundreds of
-thousands of accounts, it serves as a great source of views for content
-creators (think viral videos).
 
-![YouTube Trending Page](_support%20files/Trending%20Example.png)
+![YouTube Trending Page](_support files/Trending Example.png)
+
 
 ### Purpose of this analysis:
+1. **Develop an understanding of the YouTube Trending Videos**
+2. **Assess differences between English-speaking countries (Canada, Great Britain, United States of America)**
+                                      
 
-1.  **Develop an understanding of the YouTube Trending Videos**
-2.  **Assess differences between English-speaking countries (Canada,
-    Great Britain, United States of America)**
+*Thus, all throughout, we will generate questions, answer them with data and then further refine these questions based on what was discovered.*
 
-*Thus, all throughout, we will generate questions, answer them with data
-and then further refine these questions based on what was discovered.*
 
 ### To whom might this be helpful?
+* Content Creators / Marketing Agencies can get a better understanding of the audience which would help tailor content
+* Data Science enthusiasts, as they might get new ideas for how to use R (for beginners) or see other people's analyses (for intermediates)
+* Those that are generally interested in YouTube
 
-  - Content Creators / Marketing Agencies can get a better understanding
-    of the audience which would help tailor content
-  - Data Science enthusiasts, as they might get new ideas for how to use
-    R (for beginners) or see other people’s analyses (for intermediates)
-  - Those that are generally interested in YouTube
 
 ### Dataset information:
 
-  - Contains \>120,000 videos across three countries (Canada, Great
-    Britain, United States of America)
-  - 8 months of Daily Trending data between “2017-11-14” and
-    “2018-06-14” (approx 200 videos/day/country)
-  - All the data is downloaded from
-    <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are
-    available within the “Datasets” folder*
+* Contains >120,000 videos across three countries (Canada, Great Britain, United States of America)
+* 8 months of Daily Trending data between "2017-11-14" and "2018-06-14" (approx 200 videos/day/country)
+* All the data is downloaded from <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are available within the "Datasets" folder*
+
 
 ### Key Insights:
 
-  - Canada has a significantly different profile as it regards unique
-    videos that were trending (60%) versus Great Britain (8%) and The
-    United States of America (16%)
-  - Most videos (80%) in CA only trend for 1-2 days versus GB and US
-    where it isn’t uncommon to trend for up to 10 days (highest 38 days)
-  - Only 25% of all videos receive over 1 million views and 5% receive
-    over 5 million
-  - Music and Entertainment are the most predominant categories
-  - News\&Politics is the most controversial category (as judged by % of
-    dislikes), while Pets\&Animals and Comedy are the least disliked
+* Canada has a significantly different profile as it regards unique videos that were trending (60%) versus Great Britain (8%) and The United States of America (16%)
+* Most videos (80%) in CA only trend for 1-2 days versus GB and US where it isn't uncommon to trend for up to 10 days (highest 38 days)
+* Only 25% of all videos receive over 1 million views and 5% receive over 5 million
+* Music and Entertainment are the most predominant categories
+* News&Politics is the most controversial category (as judged by % of dislikes), while Pets&Animals and Comedy are the least disliked
 
-# 2\. Data import, tidying, cleaning
+
+# Data import, tidying, cleaning
 
 The following packages were needed to produce the output:
 
-``` r
+```r
 library(ggplot2)
 library(dplyr)
 library(lubridate)
@@ -141,15 +100,22 @@ library(rjson)
 library(jsonlite)
 library(ggcorrplot)
 library(knitr)
+library(vroom)
 ```
 
-### 2.1. Import
 
-``` r
+### Import data
+
+
+We need to import our raw data files and combine them with the JSON files that have the category data.
+
+
+
+```r
 #get datasets for the countries we're interested in (10 countries are available)
-gb_data <- read_csv("~/DS/YouTube-Trending-Videos-EDA/Datasets/GBvideos.csv")
-us_data <- read_csv("~/DS/YouTube-Trending-Videos-EDA/Datasets/USvideos.csv")
-ca_data <- read_csv("~/DS/YouTube-Trending-Videos-EDA/Datasets/CAvideos.csv")
+gb_data <- vroom("~/DS/YouTube-Trending-Videos-EDA/raw data/GBvideos.csv")
+us_data <- vroom("~/DS/YouTube-Trending-Videos-EDA/raw data/USvideos.csv")
+ca_data <- vroom("~/DS/YouTube-Trending-Videos-EDA/raw data/CAvideos.csv")
 
 #add a flag so that we know which country belongs to which dataset
 gb_data$country <- "GB"
@@ -157,24 +123,23 @@ us_data$country <- "US"
 ca_data$country <- "CA"
 
 #get category data
-us_cat_json <- fromJSON("~/DS/YouTube-Trending-Videos-EDA/Datasets/US_category_id.json")
-gb_cat_json <- fromJSON("~/DS/YouTube-Trending-Videos-EDA/Datasets/GB_category_id.json")
-ca_cat_json <- fromJSON("~/DS/YouTube-Trending-Videos-EDA/Datasets/CA_category_id.json")
-summary(us_cat_json)
+gb_cat_json <- fromJSON("~/DS/YouTube-Trending-Videos-EDA/raw data/GB_category_id.json")
+us_cat_json <- fromJSON("~/DS/YouTube-Trending-Videos-EDA/raw data/US_category_id.json")
+ca_cat_json <- fromJSON("~/DS/YouTube-Trending-Videos-EDA/raw data/CA_category_id.json")
 
 #bind together
-US_category <-  as.data.frame(cbind(us_cat_json[["items"]][["id"]], us_cat_json[["items"]][["snippet"]][["title"]]))
 GB_category <-  as.data.frame(cbind(gb_cat_json[["items"]][["id"]], gb_cat_json[["items"]][["snippet"]][["title"]]))
+US_category <-  as.data.frame(cbind(us_cat_json[["items"]][["id"]], us_cat_json[["items"]][["snippet"]][["title"]]))
 CA_category <-  as.data.frame(cbind(ca_cat_json[["items"]][["id"]], ca_cat_json[["items"]][["snippet"]][["title"]]))
 
 #change column names
-names(US_category) <- c("category_id","category_title")
 names(GB_category) <- c("category_id","category_title")
+names(US_category) <- c("category_id","category_title")
 names(CA_category) <- c("category_id","category_title")
 
 #merge data
-us_data <- merge(x = us_data, y = US_category, by = "category_id")
 gb_data <- merge(x = gb_data, y = GB_category, by = "category_id")
+us_data <- merge(x = us_data, y = US_category, by = "category_id")
 ca_data <- merge(x = ca_data, y = CA_category, by = "category_id")
 
 #combine into one dataset
@@ -186,194 +151,51 @@ rm(US_category, GB_category, CA_category)
 rm(us_cat_json, gb_cat_json, ca_cat_json)
 ```
 
-### 2.2. Clean and tidy data
 
-``` r
-#I usually like to save a backup of the raw data to make it easier to revert changes (if needed) so let's do that
-raw_data_backup <- raw_data
+### Clean and tidy data
 
-#let's check the structure of the data
-glimpse(raw_data)
-```
 
-    ## Observations: 120,582
-    ## Variables: 18
-    ## $ category_id            <dbl> 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,...
-    ## $ video_id               <chr> "YFHHGETsxkE", "OTu9N40E_MI", "4HU6Z7anycw",...
-    ## $ trending_date          <chr> "18.25.03", "18.01.03", "18.07.03", "18.25.0...
-    ## $ title                  <chr> "PAPERS, PLEASE - The Short Film (2018) 4K S...
-    ## $ channel_title          <chr> "<U+041D><U+0438><U+043A><U+0438><U+0442><U+0430> <U+041E><U+0440><U+0434><U+044B><U+043D><U+0441><U+043A><U+0438><U+0439>", "Best F(r)iends", "Lucas...
-    ## $ publish_time           <dttm> 2018-02-24 15:59:25, 2018-02-23 18:00:38, 2...
-    ## $ tags                   <chr> "<U+043A><U+0438><U+043D><U+043E>\"|\"<U+043A><U+043E><U+0440><U+043E><U+0442><U+043A><U+0438><U+0439> <U+043C><U+0435><U+0442><U+0440>\"|\"<U+043A><U+043E><U+0440><U+043E><U+0442><U+043A><U+043E><U+043C><U+0435><U+0442><U+0440><U+0430><U+0436><U+043A><U+0430>\...
-    ## $ views                  <dbl> 1978034, 189641, 3938807, 34269048, 2155048,...
-    ## $ likes                  <dbl> 183142, 3652, 234925, 440650, 96634, 37594, ...
-    ## $ dislikes               <dbl> 1360, 64, 4555, 19239, 4120, 3222, 493, 1241...
-    ## $ comment_count          <dbl> 10772, 481, 15724, 48269, 14218, 6476, 357, ...
-    ## $ thumbnail_link         <chr> "https://i.ytimg.com/vi/YFHHGETsxkE/default....
-    ## $ comments_disabled      <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA...
-    ## $ ratings_disabled       <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA...
-    ## $ video_error_or_removed <lgl> FALSE, FALSE, FALSE, FALSE, FALSE, FALSE, FA...
-    ## $ description            <chr> "SUBTITLES AVAILABLE (EN, RU, CS, DA, DE, EL...
-    ## $ country                <chr> "GB", "GB", "GB", "GB", "GB", "GB", "GB", "G...
-    ## $ category_title         <fct> Film & Animation, Film & Animation, Film & A...
+Let's do some cleaning of the raw data, add some new features and handle our missing values/NAs.
 
-``` r
-#we can spot a few class problems as well as add some additional columns
 
-#clean and format dates/times
-raw_data$trending_date <- ydm(raw_data$trending_date)
-raw_data$publish_date <- ymd(substr(raw_data$publish_time,start = 1,stop = 10))
-raw_data$hour <- format(strptime(raw_data$publish_time,"%Y-%m-%d %H:%M:%S"),'%H')
-raw_data$days_diff <- as.numeric(raw_data$trending_date-raw_data$publish_date)
 
-#remove unnecessary fields
-raw_data <- raw_data %>%
-        select(-description, -tags, -category_id, -publish_time)
 
-#add new columns for further analysis
-raw_data <- raw_data %>%
-        mutate(perc_engagement = round((likes + dislikes + comment_count) / views, digits = 2)*100,
-               perc_likes = round(likes / (likes+dislikes), digits=2)*100,
-               perc_comments = round(comment_count/views, digits = 2) * 100)
 
-#we also want to change hour and country fields to factors
-raw_data$hour <- as.factor(raw_data$hour)
-raw_data$country <- as.factor(raw_data$country)
+Lastly, there are a couple columns that we need to look into further as I am not fully confident I understand: 
 
-#remove video_error_or_removed videos as we do not want these as these videos would've been deleted/errors/copyright violations
-table(raw_data$video_error_or_removed)
-```
+* "comments_disabled"
+* "ratings_disabled"
 
-    ## 
-    ##  FALSE   TRUE 
-    ## 120463    119
 
-``` r
-#it's looks like it's an extremely dataset so we can safely remove these
-video_error_or_removed <- raw_data %>% 
-        filter (video_error_or_removed == "TRUE")%>%
-        select(country, channel_title, title, video_id) %>%
-        group_by(country, channel_title, title, video_id) %>%
-        summarize(count = n()) %>% #count = days_trending
-        arrange(desc(count))
 
-#let's also remove the unecessary column and clean the variable from the environment
-raw_data <- raw_data %>%
-        filter (video_error_or_removed == "FALSE") %>%
-        select (-video_error_or_removed)
-        
-rm(video_error_or_removed)
 
-#check for NAs
-raw_data %>% summarise_all(~ sum(is.na(.)))
-```
 
-    ##   video_id trending_date title channel_title views likes dislikes comment_count
-    ## 1        0             0     0             0     0     0        0             0
-    ##   thumbnail_link comments_disabled ratings_disabled country category_title
-    ## 1              0                 0                0       0              0
-    ##   publish_date hour days_diff perc_engagement perc_likes perc_comments
-    ## 1            0    0         0               0        720             0
+Since the sample of videos that has comments/ratings disabled is very small (1% and <1%, respectively), this won't affect our analysis too much (if at all). 
 
-``` r
-#720 NA values but at this point we're not sure if that's because of the fact that some creators choose to hide their ratings
-raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
-```
 
-    ## # A tibble: 2 x 2
-    ##   ratings_disabled count
-    ##   <lgl>            <int>
-    ## 1 FALSE                3
-    ## 2 TRUE               717
+We also don't want to remove these completely because videos that have comments disabled *could* have ratings enabled and vice-versa. Plus, if a creator disabled comments due to a controversial topic, we want to see if that's impacted ratings in any way (if enabled). 
 
-``` r
-#it looks like that's the case for al but 3 of them
-#these three videos show as NA due to not having any likes/dislikes so we will adjust the calculation slightly
-raw_data <- raw_data %>% mutate(perc_likes = ifelse(ratings_disabled == "FALSE" & likes==0, 0, round(likes / (likes+dislikes), digits=2)*100))
 
-#let's check
-raw_data %>% filter(is.na(perc_likes)) %>% group_by(ratings_disabled) %>% summarize (count = n())
-```
+# Analysis
 
-    ## # A tibble: 1 x 2
-    ##   ratings_disabled count
-    ##   <lgl>            <int>
-    ## 1 TRUE               717
 
-``` r
-#this error has been fixed now and NAs are only showing for those with ratings disabled
+While the below main themes aren't exclusive of each other (as sometimes they are mixed), I decided to structure the analysis based on the main variables I was looking at:
 
-#check for NULLs
-raw_data %>% summarise_all(~ sum(is.null(.)))
-```
+* Correlation
+* Views
+* Trending Date
+* Engagement
+* Category
 
-    ##   video_id trending_date title channel_title views likes dislikes comment_count
-    ## 1        0             0     0             0     0     0        0             0
-    ##   thumbnail_link comments_disabled ratings_disabled country category_title
-    ## 1              0                 0                0       0              0
-    ##   publish_date hour days_diff perc_engagement perc_likes perc_comments
-    ## 1            0    0         0               0          0             0
 
-``` r
-#no issues with NULLs
-```
+## Correlation
 
-Lastly, there are a couple columns that we need to look into further as
-I am not fully confident I understand:
 
-  - “comments\_disabled”
-  - “ratings\_disabled”
+Let's have a look at the covariation between our main variables: 
 
-<!-- end list -->
 
-``` r
-#check how much of the data has comments disabled
-table(quantile(raw_data$comments_disabled, probs = seq(0, 1, length.out=101)))
-```
 
-    ## 
-    ##  0  1 
-    ## 99  2
-
-``` r
-#check how much of the data has ratings disabled
-table(quantile(raw_data$ratings_disabled, probs = seq(0, 1, length.out=101)))
-```
-
-    ## 
-    ##   0   1 
-    ## 100   1
-
-``` r
-#back up our existing data one last time
-raw_data_backup <- raw_data
-```
-
-Since the sample of videos that has comments/ratings disabled is very
-small, this won’t affect our analysis too much (if at all).
-
-We also don’t want to remove these completely because videos that have
-comments disabled *could* have ratings enabled and vice-versa. Plus, if
-a creator disabled comments due to a controversial topic, we want to see
-if that’s impacted ratings in any way (if enabled).
-
-# 3\. Analysis
-
-While the below main themes aren’t exclusive of each other (as sometimes
-they are mixed), I decided to structure the analysis based on the main
-variables I was looking at:
-
-  - 3.1. Correlation
-  - 3.2. Views
-  - 3.3. Trending Date
-  - 3.4. Engagement
-  - 3.5. Category
-
-## 3.1. Correlation
-
-Let’s have a look at the covariation between our main variables:
-
-``` r
+```r
 raw_data_corr <- raw_data %>% select(views,likes,dislikes, comment_count, days_diff)
 
 # Compute a correlation matrix
@@ -383,28 +205,35 @@ corr <- round(cor(raw_data_corr), 2)
 pmat <- cor_pmat(raw_data_corr)
 ```
 
-``` r
+
+```r
 knitr::kable(pmat, 
              caption = "Fig 1 - Matrix of correlation p-values",
              digits = 3)
 ```
 
-|                | views | likes | dislikes | comment\_count | days\_diff |
-| :------------- | ----: | ----: | -------: | -------------: | ---------: |
-| views          | 0.000 |     0 |    0.000 |              0 |      0.093 |
-| likes          | 0.000 |     0 |    0.000 |              0 |      0.000 |
-| dislikes       | 0.000 |     0 |    0.000 |              0 |      0.086 |
-| comment\_count | 0.000 |     0 |    0.000 |              0 |      0.000 |
-| days\_diff     | 0.093 |     0 |    0.086 |              0 |      0.000 |
 
-Fig 1 - Matrix of correlation p-values
 
-Let’s visualise our correlation output:
+Table: Fig 1 - Matrix of correlation p-values
 
-``` r
+|              | views| likes| dislikes| comment_count| days_diff|
+|:-------------|-----:|-----:|--------:|-------------:|---------:|
+|views         | 0.000|     0|    0.000|             0|     0.093|
+|likes         | 0.000|     0|    0.000|             0|     0.000|
+|dislikes      | 0.000|     0|    0.000|             0|     0.086|
+|comment_count | 0.000|     0|    0.000|             0|     0.000|
+|days_diff     | 0.093|     0|    0.086|             0|     0.000|
+
+
+Let's visualise our correlation output:
+
+
+
+```r
 # Visualize the correlation matrix
 ggcorrplot(corr, method = "square", 
-           ggtheme = ggplot2::theme_minimal, 
+           ggtheme = ggplot2::theme_minimal,
+           type = "lower",
            title = "Medium to High correlations between our main variables",
            outline.col = "black",
            colors = c("blue","white", "red"),
@@ -412,27 +241,24 @@ ggcorrplot(corr, method = "square",
            digits = 2)
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/1%20-%20Correlation%20Plot-1.png)<!-- -->
+<img src="figures/1 - Correlation Plot-1.png" width="100%" />
 
-### Key insights from the correlation analysis:
 
+### Key insights from the correlation analysis: 
 *(remember to not confuse correlation with causation)*
 
-  - The highest correlation was between **views** and **likes**
-  - High correlation between **likes** and **comment count**, meaning
-    that people engaged a lot on the videos they liked *but*
-  - There was also a high correlation between **dislikes** and **comment
-    count**, meaning people also engaged in comments on videos they
-    disliked
-  - Together, these two **could** mean people found it easier to
-    **like/dislike** a video once they commented (or the other way
-    around)
+* The highest correlation was between **views** and **likes**
+* High correlation between  **likes** and  **comment count**, meaning that people engaged a lot on the videos they liked *but*
+* There was also a high correlation between  **dislikes** and  **comment count**, meaning people also engaged in comments on videos they disliked
+* Together, these two **could** mean people found it easier to **like/dislike** a video once they commented (or the other way around)
 
-## 3.2. Trending Date
 
-### 3.2.1. What do the overall stats look like based on the trending date?
+## Trending Date
+### What do the overall stats look like based on the trending date?
 
-``` r
+
+
+```r
 #set up overall dataset
 trending_summary <- raw_data %>%
   select(country,video_id) %>%
@@ -441,7 +267,7 @@ trending_summary <- raw_data %>%
             unique = n_distinct(video_id))
 
 ggplot(trending_summary)+
-  geom_col(aes(country, count, fill = country), show.legend = FALSE)+
+  geom_col(aes(country, count, fill = country), col = "black", show.legend = FALSE)+
   geom_line(aes(country,unique), group = 1, lwd = 1, col = "black", lty = 2)+
   geom_label(aes(country, unique, label = paste(round(unique/count*100), "% unique", sep = "")), fill = "black", col = "white")+
   labs(y = "Total Trending Videos",
@@ -449,11 +275,14 @@ ggplot(trending_summary)+
        title = "Despite a similar number of total trending videos, CA has a different \nprofile to GB and US with considerably more unique videos")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/2%20-%20overall%20videos%20by%20country-1.png)<!-- -->
+<img src="figures/2 - overall videos by country-1.png" width="100%" />
 
-### 3.2.2. How long does a video typically trend for?
 
-``` r
+### How long does a video typically trend for?
+
+
+
+```r
 #set up data
 trending_duration <- raw_data %>%
   select(country, video_id, trending_date) %>%
@@ -461,7 +290,7 @@ trending_duration <- raw_data %>%
   summarize(count = n())
 
 ggplot(trending_duration, aes(count, ..prop.., fill = country))+
-  geom_bar()+
+  geom_bar(col = "black")+
   facet_grid(.~country)+
   theme(legend.position = "none") + 
   labs(y = "% of Unique Trending Videos",
@@ -471,11 +300,14 @@ ggplot(trending_duration, aes(count, ..prop.., fill = country))+
        subtitle = "It is more common for a video to trend for 20-30 days in the GB/US than 5 days in CA")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/3%20-%20Trending%20Days%20Timespan-1.png)<!-- -->
+<img src="figures/3 - Trending Days Timespan-1.png" width="100%" />
 
-### 3.2.3. How long does it take for a video to become trending for the first time?
 
-``` r
+### How long does it take for a video to reach trending for the first time?
+
+
+
+```r
 #create a new dataset to help answer this question
 trending_data <- raw_data %>%
   select(country, video_id, views, days_diff) %>%
@@ -485,41 +317,53 @@ trending_data <- raw_data %>%
             days_diff = min(days_diff))
 ```
 
-Let’s look at a basic spread
 
-``` r
+Let's look at a basic spread
+
+
+
+```r
 summary(trending_data$days_diff)
 ```
 
-    ##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
-    ##    0.00    1.00    1.00    9.81    2.00 4215.00
+```
+##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+##    0.00    1.00    1.00    9.81    2.00 4215.00
+```
 
-Not as detailed as we’d like so let’s see this in increments of 1%
 
-``` r
+Not as detailed as we'd like so let's see this in increments of 1%
+
+
+
+```r
 quantile(trending_data$days_diff, probs = seq(0, 1, length.out=101))
 ```
 
-    ##   0%   1%   2%   3%   4%   5%   6%   7%   8%   9%  10%  11%  12%  13%  14%  15% 
-    ##    0    0    0    0    0    0    0    1    1    1    1    1    1    1    1    1 
-    ##  16%  17%  18%  19%  20%  21%  22%  23%  24%  25%  26%  27%  28%  29%  30%  31% 
-    ##    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1 
-    ##  32%  33%  34%  35%  36%  37%  38%  39%  40%  41%  42%  43%  44%  45%  46%  47% 
-    ##    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1 
-    ##  48%  49%  50%  51%  52%  53%  54%  55%  56%  57%  58%  59%  60%  61%  62%  63% 
-    ##    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1 
-    ##  64%  65%  66%  67%  68%  69%  70%  71%  72%  73%  74%  75%  76%  77%  78%  79% 
-    ##    1    1    1    1    1    1    1    1    1    1    1    2    2    2    2    2 
-    ##  80%  81%  82%  83%  84%  85%  86%  87%  88%  89%  90%  91%  92%  93%  94%  95% 
-    ##    2    2    2    2    2    2    2    2    2    2    3    3    3    3    4    4 
-    ##  96%  97%  98%  99% 100% 
-    ##    5    6    9   18 4215
+```
+##   0%   1%   2%   3%   4%   5%   6%   7%   8%   9%  10%  11%  12%  13%  14%  15% 
+##    0    0    0    0    0    0    0    1    1    1    1    1    1    1    1    1 
+##  16%  17%  18%  19%  20%  21%  22%  23%  24%  25%  26%  27%  28%  29%  30%  31% 
+##    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1 
+##  32%  33%  34%  35%  36%  37%  38%  39%  40%  41%  42%  43%  44%  45%  46%  47% 
+##    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1 
+##  48%  49%  50%  51%  52%  53%  54%  55%  56%  57%  58%  59%  60%  61%  62%  63% 
+##    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1    1 
+##  64%  65%  66%  67%  68%  69%  70%  71%  72%  73%  74%  75%  76%  77%  78%  79% 
+##    1    1    1    1    1    1    1    1    1    1    1    2    2    2    2    2 
+##  80%  81%  82%  83%  84%  85%  86%  87%  88%  89%  90%  91%  92%  93%  94%  95% 
+##    2    2    2    2    2    2    2    2    2    2    3    3    3    3    4    4 
+##  96%  97%  98%  99% 100% 
+##    5    6    9   18 4215
+```
 
-We can now see that 99% of videos got on the trending page within 0-18
-days from publish date. We will use this 99th percentile as a max limit
-for our graphs for a clearer visualisation.
 
-``` r
+We can now see that 99% of videos got on the trending page within 0-18 days from publish date.
+We will use this 99th percentile as a max limit for our graphs for a clearer visualisation.
+
+
+
+```r
 max_limit <- quantile(trending_data$days_diff, probs = c(0.99))
 
 #let's visualise this
@@ -532,15 +376,18 @@ ggplot(trending_data, aes(as.factor(days_diff), count))+
        subtitle = "It is unlikely for a video to reach the trending page if it hasn't done so within the first 10 days")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-10-1.png)<!-- -->
+<img src="figures/unnamed-chunk-11-1.png" width="100%" />
 
-Let’s segment this by Country.
 
-``` r
+Let's segment this by Country.
+
+
+
+```r
 #Is there a difference between countries?
 ggplot(trending_data, aes(days_diff, count, fill = country))+
   geom_col()+
-  coord_cartesian(xlim=c(0,max_limit))+ #zooming in on the area of interest (99% of the data)
+  coord_cartesian(xlim=c(0,max_limit))+#zooming in on the area of interest (99% of the data)
   facet_grid(.~country)+
   theme(legend.position = "none") + 
   labs(y = "Unique Trending Videos",
@@ -549,11 +396,14 @@ ggplot(trending_data, aes(days_diff, count, fill = country))+
        title = "Videos in Canada videos tend to become trending very quickly, \nunlike the US where this spread is wider, and GB where it is widest")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-11-1.png)<!-- -->
+<img src="figures/unnamed-chunk-12-1.png" width="100%" />
 
-### 3.2.4. Are there any differences in the amount of videos that trended each month?
 
-``` r
+### Are there any differences in the amount of videos that trended each month?
+
+
+
+```r
 #create dataset
 trending_by_day <- raw_data %>%
   select(country, trending_date) %>%
@@ -570,13 +420,15 @@ ggplot(trending_by_day, aes(day, count, col = country)) +
        subtitle = "It is hard to tell if this was due to a data collection error or the trending process changed")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/Videos%20per%20Day-1.png)<!-- -->
+<img src="figures/Videos per Day-1.png" width="100%" />
 
-## 3.3. Views
 
-### 3.3.1. What do the overall stats look like for views?
+## Views
+### What do the overall stats look like for views?
 
-``` r
+
+
+```r
 #create dataset
 views_summary <- raw_data %>%
   select(country,video_id,views) %>%
@@ -590,7 +442,7 @@ views_summary <- raw_data %>%
             views = sum(views)/1000000000)
 
 ggplot(views_summary)+
-  geom_col(aes(country, views, fill = country))+
+  geom_col(aes(country, views, fill = country), col = "black")+
   geom_line(aes(country,unique), group = 1, lwd = 2, col = "black", lty = 3)+
   geom_label(aes(country, unique, label = unique), fill = "black", col = "white")+
   theme(legend.position = "none") + 
@@ -600,11 +452,14 @@ ggplot(views_summary)+
        title = "CA leads in total views (8x more unique videos than GB and 4x more than US) \nGB has more Views than US, despite having ~50% fewer videos")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-12-1.png)<!-- -->
+<img src="figures/unnamed-chunk-13-1.png" width="100%" />
 
-### 3.3.2. Overall, what’s the spread of views for those that reached trending (in millions)?
 
-``` r
+### Overall, what's the spread of views for those that reached trending (in millions)?
+
+
+
+```r
 views_data <- raw_data %>%
   select(country,video_id,views) %>%
   group_by(country, video_id) %>%
@@ -615,70 +470,84 @@ views_data <- raw_data %>%
             views_rounded = round(views/1000000))
 ```
 
-Let’s look at a basic spread of the Views per Video across all countries
 
-``` r
+Let's look at a basic spread of the Views per Video across all countries
+
+
+
+```r
 table(quantile(views_data$views_m_reached, probs = seq(0, 1, length.out=101)))
 ```
 
-    ## 
-    ##   0   1   2   3   4   5   7  10  19 424 
-    ##  77  11   5   2   1   1   1   1   1   1
+```
+## 
+##   0   1   2   3   4   5   7  10  19 424 
+##  77  11   5   2   1   1   1   1   1   1
+```
 
-This is already very helpful as we can see that 77% of videos did not
-make it past of million. Similarly, only \~5% made it past the 5m mark.
 
-However, I’d like to see this split even more detailed.
+This is already very helpful as we can see that 77% of videos did not make it past of million. Similarly, only ~5% made it past the 5m mark.
 
-``` r
+
+However, I'd like to see this split even more detailed.
+
+
+
+```r
 quantile(views_data$views_m_reached, probs = seq(0, 1, length.out=101))
 ```
 
-    ##   0%   1%   2%   3%   4%   5%   6%   7%   8%   9%  10%  11%  12%  13%  14%  15% 
-    ##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
-    ##  16%  17%  18%  19%  20%  21%  22%  23%  24%  25%  26%  27%  28%  29%  30%  31% 
-    ##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
-    ##  32%  33%  34%  35%  36%  37%  38%  39%  40%  41%  42%  43%  44%  45%  46%  47% 
-    ##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
-    ##  48%  49%  50%  51%  52%  53%  54%  55%  56%  57%  58%  59%  60%  61%  62%  63% 
-    ##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
-    ##  64%  65%  66%  67%  68%  69%  70%  71%  72%  73%  74%  75%  76%  77%  78%  79% 
-    ##    0    0    0    0    0    0    0    0    0    0    0    0    0    1    1    1 
-    ##  80%  81%  82%  83%  84%  85%  86%  87%  88%  89%  90%  91%  92%  93%  94%  95% 
-    ##    1    1    1    1    1    1    1    1    2    2    2    2    2    3    3    4 
-    ##  96%  97%  98%  99% 100% 
-    ##    5    7   10   19  424
+```
+##   0%   1%   2%   3%   4%   5%   6%   7%   8%   9%  10%  11%  12%  13%  14%  15% 
+##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
+##  16%  17%  18%  19%  20%  21%  22%  23%  24%  25%  26%  27%  28%  29%  30%  31% 
+##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
+##  32%  33%  34%  35%  36%  37%  38%  39%  40%  41%  42%  43%  44%  45%  46%  47% 
+##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
+##  48%  49%  50%  51%  52%  53%  54%  55%  56%  57%  58%  59%  60%  61%  62%  63% 
+##    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0    0 
+##  64%  65%  66%  67%  68%  69%  70%  71%  72%  73%  74%  75%  76%  77%  78%  79% 
+##    0    0    0    0    0    0    0    0    0    0    0    0    0    1    1    1 
+##  80%  81%  82%  83%  84%  85%  86%  87%  88%  89%  90%  91%  92%  93%  94%  95% 
+##    1    1    1    1    1    1    1    1    2    2    2    2    2    3    3    4 
+##  96%  97%  98%  99% 100% 
+##    5    7   10   19  424
+```
 
-At this point, we can see that 99% of the data has between 0m views to
-19m views. For a clearer visualisation, let’s set a max limit up to this
-99th percentile as a max limit for our graphs and visualise the data.
 
-``` r
+At this point, we can see that 99% of the data has between 0m views to 19m views. 
+For a clearer visualisation, let's set a max limit up to this 99th percentile as a max limit for our graphs and visualise the data.
+
+
+
+```r
 max_limit <- quantile(views_data$views_m_reached, probs = c(0.99))
 
 ggplot(views_data, aes(views_m_reached, count))+
-  geom_col(fill="dark red")+
+  geom_col(fill = "dark red")+
   coord_cartesian(xlim=c(0,max_limit))+
   labs(y = "Unique Trending Videos",
        x = "Views (millions)",
        title = "Only ~25% of videos receive more than 1 million views \nMost (~95%) of the videos haven't reached the 5m view count")+
-  geom_vline(xintercept=0.51, lwd = 1, col = "black", lty = 1)+
+  geom_vline(xintercept=0.51, lwd = 1, lty = 1)+
   annotate("text", x = 0.8, y = 29000, label = "76% of data", angle = 90)+
-  geom_vline(xintercept=4.5, lwd = 1, col = "black", lty = 5)+
+  geom_vline(xintercept=4.5, lwd = 1, lty = 5)+
   annotate("text", x = 4.8, y = 29000, label = "95% of data", angle = 90)+
-  geom_vline(xintercept=max_limit+0.5, lwd = 1, col = "black", lty = 2)+
+  geom_vline(xintercept=max_limit+0.5, lwd = 1, lty = 2)+
   annotate("text", x = max_limit-0.3+0.4, y = 29000, label = "99% of data", angle = 90)
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/4-%20View%20Spread-1.png)<!-- -->
+<img src="figures/4- View Spread-1.png" width="100%" />
 
-Let’s segment this by country and see if there are any major profile
-differences. To account for the different in unique videos shown, we
-will look at the % of videos in each bucket rather than absolute number.
 
-``` r
-ggplot(views_data)+
-geom_bar(aes(views_m_reached, ..prop.., fill = country))+
+Let's segment this by country and see if there are any major profile differences.
+To account for the different in unique videos shown, we will look at the % of videos in each bucket rather than absolute number.
+
+
+
+```r
+ggplot(views_data, aes(views_m_reached, ..prop.., fill = country))+
+geom_bar(col = "black")+
 facet_grid(~country)+
 theme(legend.position = "none") + 
 coord_cartesian(xlim=c(0,max_limit))+
@@ -689,49 +558,53 @@ labs(y = "% of Unique Trending Videos",
        subtitle = "The spread of those that reached >5m views is  much narrower in CA than GB and US")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/Views%20Spready%20By%20Country-1.png)<!-- -->
+<img src="figures/Views Spready By Country-1.png" width="100%" />
 
-### 3.3.3. What does the profile look like for the majority of the videos that never reached the 1m views mark?
 
-``` r
+### What does the profile look like for the majority of the videos that never reached the 1m views mark?
+
+
+
+```r
 #let's adapt the dataset to only include the videos that never reached 1m views
 views_data_below1m <- views_data %>%
   filter (views_m_reached < 1)
 
 #let's visualise this
 ggplot(views_data_below1m, aes(views))+
-  geom_histogram(fill="dark red", binwidth = 10000)+
+  geom_histogram(fill="dark red", col = "black", binwidth = 25000)+
   labs(y = "Unique Trending Videos",
        x = "Views",
        title = "The data is highly skewed to the right",
        subtitle = "Most videos tend to have up to 100,000 views after which there's a steep decline")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-16-1.png)<!-- -->
+<img src="figures/unnamed-chunk-17-1.png" width="100%" />
 
-Similarly to before, let’s conduct a segmentation by country and see if
-there are any major differences:
 
-``` r
+Similarly to before, let's conduct a segmentation by country and see if there are any major differences:
+
+
+
+```r
 #Segmentation by country
-ggplot(views_data_below1m)+
-  geom_bar(aes(views, fill = country), binwidth = 10000)+
-  facet_wrap(~country)+
-  theme(legend.position = "none") + 
+ggplot(views_data_below1m, aes(views, fill = country))+
+  geom_histogram(col = "black", binwidth = 25000)+
   labs(y = "Unique Trending Videos",
        x = "Views",
-       fill = "Country",
-       title = "The same right-skewed trend was found at a country level")
+       title = "The data is highly skewed to the right",
+       subtitle = "Most videos tend to have up to 100,000 views after which there's a steep decline")+
+  facet_wrap(.~country)
 ```
 
-    ## Warning: `geom_bar()` no longer has a `binwidth` parameter. Please use
-    ## `geom_histogram()` instead.
+<img src="figures/unnamed-chunk-18-1.png" width="100%" />
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-17-1.png)<!-- -->
 
-### 3.3.4. Is a video required to trend for more than a day in order to get the best results?
+### Is a video required to trend for more than a day in order to get the best results?
 
-``` r
+
+
+```r
 views_by_video <- raw_data %>% 
   select(video_id, views, country, trending_date) %>%
   group_by(country, video_id, trending_date) %>%
@@ -751,11 +624,14 @@ ggplot(views_by_video, aes(as.factor(count), views)) +
        subtitle = "However, the sample size decreases significantly with each increase in total trending days")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/Views%20by%20Trending%20day%20count-1.png)<!-- -->
+<img src="figures/Views by Trending day count-1.png" width="100%" />
 
-Let’s check the same trend at a country level
 
-``` r
+Let's check the same trend at a country level
+
+
+
+```r
 ggplot(views_by_video, aes(as.factor(count), views)) +
   geom_boxplot(aes(fill = country), outlier.shape = NA, col = "black", size = 0.1)+
   coord_cartesian(ylim = c(0, 100))+
@@ -768,13 +644,15 @@ ggplot(views_by_video, aes(as.factor(count), views)) +
   facet_wrap(~country)
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-18-1.png)<!-- -->
+<img src="figures/unnamed-chunk-19-1.png" width="100%" />
 
-## 3.4. Category
 
-### 3.4.1. How do categories differ in terms of the amount of videos that made it on the trending page?
+## Category
+### How do categories differ in terms of the amount of videos that made it on the trending page?
 
-``` r
+
+
+```r
 raw_data_cat <- raw_data %>%
   select(country, category_title, video_id, views) %>%
   group_by(country, category_title, video_id) %>%
@@ -789,7 +667,7 @@ raw_data_cat <- raw_data %>%
 
 #let's visualise (line indicates unique count)
 ggplot(raw_data_cat, aes(x=reorder(category_title, count), y = count, fill = category_title)) + 
-  geom_bar(stat = "identity") +
+  geom_bar(stat = "identity",  col = "black") +
   facet_grid(~country) +
   theme(legend.position = "none") + 
   labs(y = "Unique Videos",
@@ -798,13 +676,16 @@ ggplot(raw_data_cat, aes(x=reorder(category_title, count), y = count, fill = cat
   coord_flip()
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-19-1.png)<!-- -->
+<img src="figures/unnamed-chunk-20-1.png" width="100%" />
 
-### 3.4.2. How do categories differ in terms of views?
 
-``` r
+### How do categories differ in terms of views?
+
+
+
+```r
 ggplot(raw_data_cat) + 
-  geom_bar(aes(reorder(category_title, views), views, fill = category_title), stat = "identity") +
+  geom_bar(aes(reorder(category_title, views), views, fill = category_title), col = "black", stat = "identity") +
   geom_line(aes(reorder(category_title,views), unique_count), group = 1, lwd = 0.5, lty = 1) +
   facet_grid(~country) +
   theme(legend.position = "none") + 
@@ -815,17 +696,19 @@ ggplot(raw_data_cat) +
   coord_flip()
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/5%20-%20Views%20by%20Category-1.png)<!-- -->
+<img src="figures/5 - Views by Category-1.png" width="100%" />
 
-This difference in views, despite a comparable number of unique videos,
-could mean that those within the Music category have a significantly
-higher number of views.
 
-Let’s explore this.
+This difference in views, despite a comparable number of unique videos, could mean that those within the Music category have a significantly higher number of views. 
 
-### 3.4.3. What does the spread of views within each category look like?
+Let's explore this.
 
-``` r
+
+### What does the spread of views within each category look like?
+
+
+
+```r
 raw_data_cat_detail <- raw_data %>%
   select(country, category_title, video_id, views) %>%
   group_by(country, category_title, video_id) %>%
@@ -846,11 +729,14 @@ ggplot(raw_data_cat_detail, aes(reorder(category_title, count), views, fill = ca
   coord_flip(ylim=c(0,25))
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-20-1.png)<!-- -->
+<img src="figures/unnamed-chunk-21-1.png" width="100%" />
 
-And let’s look at the outliers separately.
 
-``` r
+And let's look at the outliers separately.
+
+
+
+```r
 ggplot(raw_data_cat_detail, aes(reorder(category_title, count), views, fill = category_title)) + 
   geom_boxplot(size = 0.5, outlier.shape = 1, outlier.colour = "red", outlier.alpha = 0.3) +
   facet_grid(~country) +
@@ -861,13 +747,17 @@ ggplot(raw_data_cat_detail, aes(reorder(category_title, count), views, fill = ca
   coord_flip()
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-21-1.png)<!-- -->
+<img src="figures/unnamed-chunk-22-1.png" width="100%" />
 
-## 3.5. Engagement
 
-### 3.5.1. General stats by country
+## Engagement
 
-``` r
+
+### General stats by country
+
+
+
+```r
 raw_data_eng_overall <- raw_data %>%
   select(country, category_title, video_id, trending_date, likes, comment_count, dislikes, views) %>%
   group_by (country) %>%
@@ -877,7 +767,7 @@ raw_data_eng_overall <- raw_data %>%
 
 
 ggplot(raw_data_eng_overall) + 
-  geom_col(aes(country, perc_dislikes, fill = country)) +
+  geom_col(aes(country, perc_dislikes, fill = country), col = "black") +
   geom_line(aes(country, perc_engagement), group = 1, lwd = 1, lty = 3) +
   theme(legend.position = "none") + 
   labs(y = "% dislikes / % engagement",
@@ -886,11 +776,14 @@ ggplot(raw_data_eng_overall) +
        subtitle = "Bar chart - % of Dislikes ( Dislikes / ( Likes + Dislikes ) ); \nDotted Line chart - % engagement ( ( Likes + Dislikes + Comments ) / Views )")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-22-1.png)<!-- -->
+<img src="figures/unnamed-chunk-23-1.png" width="100%" />
 
-### 3.5.2. What are the most/least controversial categories?
 
-``` r
+### What are the most/least controversial categories?
+
+
+
+```r
 #let's create a dataset at category level that we can use for further analysis
 raw_data_eng <- raw_data %>%
   select(country, category_title, video_id, trending_date, likes, comment_count, dislikes, views) %>%
@@ -912,7 +805,7 @@ raw_data_eng <- raw_data %>%
   filter(!category_title %in% c("Shows", "Nonprofits & Activism", "Movies"))
 
 ggplot(raw_data_eng) + 
-  geom_bar(aes(reorder(category_title, perc_dislikes), perc_dislikes, fill = category_title), stat = "identity") +
+  geom_bar(aes(reorder(category_title, perc_dislikes), perc_dislikes, fill = category_title), col = "black", stat = "identity") +
   geom_line(aes(reorder(category_title, perc_dislikes), views), group = 1, lwd = 1, lty = 3) +
   facet_grid(~country) +
   theme(legend.position = "none") + 
@@ -923,11 +816,14 @@ ggplot(raw_data_eng) +
   coord_flip()
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-23-1.png)<!-- -->
+<img src="figures/unnamed-chunk-24-1.png" width="100%" />
 
-### 3.5.3. How do the countries differ based on the spread of the % of dislikes?
 
-``` r
+### How do the countries differ based on the spread of the % of dislikes?
+
+
+
+```r
 #we need to create a dataset at video level now to look at spread within categories
 raw_data_eng_detail <- raw_data %>%
   filter (comments_disabled == FALSE, ratings_disabled == FALSE) %>%
@@ -958,46 +854,47 @@ ggplot(raw_data_eng_detail) +
        y="% Dislikes")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/unnamed-chunk-24-1.png)<!-- -->
+<img src="figures/unnamed-chunk-25-1.png" width="100%" />
 
-### 3.5.4. How do the countries differ based on the % of videos disliked?
 
-``` r
+### How do the countries differ based on the % of videos disliked?
+
+
+
+```r
 ggplot(raw_data_eng) + 
-  geom_col(aes(country, perc_dislikes, fill = country)) +
+  geom_col(aes(country, perc_dislikes, fill = country), col = "black") +
   facet_wrap(~category_title, as.table = FALSE) +
   theme(legend.position = "none") + 
   labs(y = "% Dislikes",
        x = NULL,
-       title = "News&Politics videos (highest disliked overall) are more controversial in the \nUS (~20%) than in GB (~14%) and CA(~%8)",
-       subtitle = "Entertainment and Sport videos are more controversial in the GB than US and CA \nThe three countries love Dog/Cat videos and Comedy equally (highest liked categories)")
+       title = "News&Politics videos (highest disliked overall) are more controversial in the \nUS (~20%) than in GB (~14%) and CA(~%8)")
 ```
 
-![](Exploratory-Data-Analysis_files/figure-gfm/6%20-%20Dislikes%20by%20Category-1.png)<!-- -->
+<img src="figures/6 - Dislikes by Category-1.png" width="100%" />
 
-# 4\. Further analysis:
 
+We can alse see that Entertainment and Sport videos are more controversial in the GB than US and CA and that all three countries love Dog/Cat videos and Comedy equally (highest liked categories).
+
+ 
+# Further analysis:
+ 
 ## Additional data fields that could provide an even better understanding:
 
-#### a) Public Data:
+a) Public Data: 
 
-  - **Subscriber count** (if made public) as they could be a significant
-    contributor to views (especially soon after a video gets posted)
-  - Other **social media profiles** (high fan base could contribute to
-    the engagement)
-  - **Share count** (on Facebook, Instagram, Reddit, etc)
-  - **Video length**
-  - **Search Engine Optimisation**
+* **Subscriber count** (if made public) as they could be a significant contributor to views (especially soon after a video gets posted)
+* Other **social media profiles** (high fan base could contribute to the engagement)
+* **Share count** (on Facebook, Instagram, Reddit, etc)
+* **Video length**
+* **Search Engine Optimisation**
 
-#### b) Private Data (only the creator can access these)
+b) Private Data (only the creator can access these)
 
-  - **Watch time** and **% of video watched** (ie. if a video has a
-    total length of 10 mins, what gets watched on average)
-  - **% Click Through Rate** (ie. out of 100 people that see a video’s
-    thumbnail, what % clicks on it)
+* **Watch time** and **% of video watched** (ie. if a video has a total length of 10 mins, what gets watched on average)
+* **% Click Through Rate** (ie. out of 100 people that see a video's thumbnail, what % clicks on it)
 
 ## Other uses for this dataset:
 
-  - **Clustering** analysis to analyse different types of videos
-  - **Regression** analysis to see if we can predict how many views a
-    video will get / what contributed the most
+* **Clustering** analysis to analyse different types of videos
+* **Regression** analysis to see if we can predict how many views a video will get / what contributed the most
