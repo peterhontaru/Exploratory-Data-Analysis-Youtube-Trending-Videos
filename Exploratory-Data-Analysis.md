@@ -43,7 +43,7 @@ knitr::opts_chunk$set(
 
 **Are there differences between YouTube Trending videos in English-speaking countries (Canada, Great Britain, United States)? If yes, which aspects of the videos cause these differences?**
 
-*Thus, all throughout, we will generate questions, answer them with data and then further refine these questions based on what was discovered.*
+All throughout this analysis we will generate questions, answer them with data and then further refine these questions based on what was discovered.
 
 
 ## Who is this project intended for? {-}
