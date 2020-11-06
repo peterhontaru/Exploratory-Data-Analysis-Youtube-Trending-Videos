@@ -1,24 +1,18 @@
 ---
     output:
       html_document:
-              
         toc: true
         toc_float: false
         toc_depth: 3
         number_sections: true
-        
         code_folding: hide
         code_download: true
-        
         fig_width: 9 
         fig_height: 5
         fig_align: "center"
-        
         highlight: pygments
         theme: cerulean
-        
         keep_md: true
-        
     title: "Exploratory Data Analysis - Youtube Trending Videos"
     subtitle: "Same language, different viewership habits? Here's what 120,000+ videos show." 
     author: "by Peter Hontaru"
@@ -44,45 +38,47 @@ knitr::opts_chunk$set(
 # Background
 
 
-### Why this dataset?
+## Problem statement: {-}
+
+**Are there differences between YouTube Trending videos in English-speaking countries (Canada, Great Britain, United States)? If yes, which aspects of the videos cause these differences?**
+
+All throughout this analysis we will generate questions, answer them with data and then further refine these questions based on what was discovered.
+
+
+## Who is this project intended for? {-}
+
+* Content Creators / Marketing Agencies can get a better understanding of the audience which would help tailor content
+* Data Science enthusiasts, as they might get new ideas for how to use R (for beginners) or see other people's analyses (for intermediates)
+* Those that are generally interested in YouTube
+
+
+## Why this dataset? {-}
+
 YouTube has been an influential source of knowledge both in my professional life as well in my personal goals/ambitions. Thus, I thought it would be interesting to **explore** this dataset, gather **insights** and understand the more about the platform.
 
 
-### What are Trending Videos and why are they important? 
+## Key Insights: {-}
+
+* Canada has a significantly different profile with more unique trending videos (60%) versus Great Britain (8%) and The United States of America (16%)
+* Most videos in CA only trend for 1-2 days (80%) versus GB and US where it isn't uncommon to trend for up to 10 days (highest 38 days)
+* Only 25% of all videos receive over 1 million views and 5% receive over 5 million
+* Music and Entertainment are the most prominent categories
+* News&Politics is the most controversial category (as judged by % of dislikes), while Pets&Animals and Comedy are the least disliked
+
+
+## What are Trending Videos and why are they important? {-}
+
 Trending videos work alongside the home page to provide users with content to watch. While the home page is **highly personalised** (via the YouTube algorithm) on previous views, what the user watched longest, engagement, subscriptions, the trending page is **very broad and identical across all accounts**. Since it shows this feed to hundreds of thousands of accounts, it serves as a great source of views for content creators (think viral videos).
 
 
 ![YouTube Trending Page](_support files/Trending Example.png)
 
 
-### Purpose of this analysis:
-1. **Develop an understanding of the YouTube Trending Videos**
-2. **Assess differences between English-speaking countries (Canada, Great Britain, United States of America)**
-                                      
-
-*Thus, all throughout, we will generate questions, answer them with data and then further refine these questions based on what was discovered.*
-
-
-### To whom might this be helpful?
-* Content Creators / Marketing Agencies can get a better understanding of the audience which would help tailor content
-* Data Science enthusiasts, as they might get new ideas for how to use R (for beginners) or see other people's analyses (for intermediates)
-* Those that are generally interested in YouTube
-
-
-### Dataset information:
+## Dataset information: {-}
 
 * Contains >120,000 videos across three countries (Canada, Great Britain, United States of America)
 * 8 months of Daily Trending data between "2017-11-14" and "2018-06-14" (approx 200 videos/day/country)
 * All the data is downloaded from <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are available within the "Datasets" folder*
-
-
-### Key Insights:
-
-* Canada has a significantly different profile as it regards unique videos that were trending (60%) versus Great Britain (8%) and The United States of America (16%)
-* Most videos (80%) in CA only trend for 1-2 days versus GB and US where it isn't uncommon to trend for up to 10 days (highest 38 days)
-* Only 25% of all videos receive over 1 million views and 5% receive over 5 million
-* Music and Entertainment are the most predominant categories
-* News&Politics is the most controversial category (as judged by % of dislikes), while Pets&Animals and Comedy are the least disliked
 
 
 # Data import, tidying, cleaning
@@ -102,7 +98,7 @@ library(vroom)
 ```
 
 
-### Import data
+### Import data {-}
 
 
 We need to import our raw data files and combine them with the JSON files that have the category data.
@@ -149,7 +145,7 @@ rm(us_cat_json, gb_cat_json, ca_cat_json)
 ```
 
 
-### Clean and tidy data
+### Clean and tidy data {-}
 
 
 Let's do some cleaning of the raw data, add some new features and handle our missing values/NAs.
@@ -670,7 +666,6 @@ Let's explore this.
 
 
 ```{r}
-
 raw_data_cat_detail <- raw_data %>%
   select(country, category_title, video_id, views) %>%
   group_by(country, category_title, video_id) %>%
@@ -808,7 +803,7 @@ ggplot(raw_data_eng_detail) +
 ### How do the countries differ based on the % of videos disliked?
 
 
-```{r 6 - Dislikes by Category, fig.height=6}
+```{r 6 - Dislikes by Category, fig.height=7}
 ggplot(raw_data_eng) + 
   geom_col(aes(country, perc_dislikes, fill = country), col = "black") +
   facet_wrap(~category_title, as.table = FALSE) +
@@ -824,9 +819,9 @@ We can alse see that Entertainment and Sport videos are more controversial in th
  
 # Further analysis:
  
-## Additional data fields that could provide an even better understanding:
+## Additional data fields that could provide an even better understanding: {-}
 
-a) Public Data: 
+a) Public Data:
 
 * **Subscriber count** (if made public) as they could be a significant contributor to views (especially soon after a video gets posted)
 * Other **social media profiles** (high fan base could contribute to the engagement)
@@ -839,7 +834,7 @@ b) Private Data (only the creator can access these)
 * **Watch time** and **% of video watched** (ie. if a video has a total length of 10 mins, what gets watched on average)
 * **% Click Through Rate** (ie. out of 100 people that see a video's thumbnail, what % clicks on it)
 
-## Other uses for this dataset:
+## Other uses for this dataset: {-}
 
 * **Clustering** analysis to analyse different types of videos
 * **Regression** analysis to see if we can predict how many views a video will get / what contributed the most
