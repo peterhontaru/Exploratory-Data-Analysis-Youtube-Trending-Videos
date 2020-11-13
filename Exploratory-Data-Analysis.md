@@ -48,28 +48,29 @@ All throughout this analysis we will generate questions, answer them with data a
 
 ## Who is this project intended for? {-}
 
-* Content Creators / Marketing Agencies can get a better understanding of the audience which would help tailor content
+* Content Creators / Marketing Agencies who want to better understand their audience and tailor their content effectively
 * Data Science enthusiasts, as they might get new ideas for how to use R (for beginners) or see other people's analyses (for intermediates)
-* Those that are generally interested in YouTube
+* those generally interested in YouTube
 
 
 ## Why this dataset? {-}
 
-YouTube has been an influential source of knowledge both in my professional life as well in my personal goals/ambitions. Thus, I thought it would be interesting to **explore** this dataset, gather **insights** and understand the more about the platform.
+YouTube has been an influential source of knowledge both in my professional life as well in my personal goals/ambitions. Thus, I thought it would be interesting to **explore** this dataset and gather **insights** in order to better understand the platform.
 
 
 ## Key Insights: {-}
 
-* Canada has a significantly different profile with more unique trending videos (60%) versus Great Britain (8%) and The United States of America (16%)
-* Most videos in CA only trend for 1-2 days (80%) versus GB and US where it isn't uncommon to trend for up to 10 days (highest 38 days)
-* Only 25% of all videos receive over 1 million views and 5% receive over 5 million
-* Music and Entertainment are the most prominent categories
-* News&Politics is the most controversial category (as judged by % of dislikes), while Pets&Animals and Comedy are the least disliked
+* despite a similar number of total trending videos, **Canada has more unique videos** (60%) versus Great Britain (8%) and The United States of America (16%)
+* **most videos in CA only trend for 1-2 days** (80%) versus GB and US where it isn't uncommon to trend for up to 10 days (highest 38 days), showing a need for consistent innovation
+* generally, **75% of videos trend within their first day** and **95% of videos trend within the first 5 days**. In CA, videos usually take 1-2 days to reach trending, while in the US and UK it could take up to 5-7 days
+* **only 25% of all videos receive over 1 million views** and **5% receive over 5 million**
+* **Music** and **Entertainment** are the most common trending categories
+* **News & Politics** is the most controversial category (as judged by % of dislikes), while **Pets & Animals** and **Comedy** are the least disliked
 
 
 ## What are Trending Videos and why are they important? {-}
 
-Trending videos work alongside the home page to provide users with content to watch. While the home page is **highly personalised** (via the YouTube algorithm) on previous views, what the user watched longest, engagement, subscriptions, the trending page is **very broad and identical across all accounts**. Since it shows this feed to hundreds of thousands of accounts, it serves as a great source of views for content creators (think viral videos).
+Trending videos work alongside the home page to provide users with content to watch. While the home page is **highly personalised** (via the YouTube algorithm) based on previous views, what the user watched longest, engagement, subscriptions, the trending page is **very broad and identical across all accounts**. Since it shows this feed to millions of users, it serves as a great source of views for content creators (think viral videos).
 
 
 ![YouTube Trending Page](_support files/Trending Example.png)
@@ -77,9 +78,9 @@ Trending videos work alongside the home page to provide users with content to wa
 
 ## Dataset information: {-}
 
-* Contains >120,000 videos across three countries (Canada, Great Britain, United States of America)
-* 8 months of Daily Trending data between "2017-11-14" and "2018-06-14" (approx 200 videos/day/country)
-* All the data is downloaded from <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are available within the "Datasets" folder*
+* contains >120,000 videos across three countries (Canada, Great Britain, United States of America)
+* 8 months of Daily Trending data between **2017-11-14** and **2018-06-14** (approx 200 videos/day/country)
+* all the data is downloaded from <https://www.kaggle.com/datasnaek/youtube-new> - *Raw data files are available within the "raw data" folder*
 
 
 # Data import, tidying, cleaning
@@ -241,16 +242,18 @@ ggcorrplot(corr, method = "square",
 
 
 ### Key insights from the correlation analysis: 
-*(remember to not confuse correlation with causation)*
+*(remember not to confuse correlation with causation)*
 
-* The highest correlation was between **views** and **likes**
-* High correlation between  **likes** and  **comment count**, meaning that people engaged a lot on the videos they liked *but*
-* There was also a high correlation between  **dislikes** and  **comment count**, meaning people also engaged in comments on videos they disliked
-* Together, these two **could** mean people found it easier to **like/dislike** a video once they commented (or the other way around)
+* the highest correlation was between **views** and **likes**
+* high correlation between  **likes** and  **comment count**, meaning that people engaged a lot on the videos they liked *but*
+* there was also a high correlation between  **dislikes** and  **comment count**, meaning people also engaged in comments on videos they disliked
+* together, these two **could** mean people found it easier to **like/dislike** a video once they commented (or the other way around)
 
 
 ## Trending Date
-### What do the overall stats look like based on the trending date?
+
+
+### What do the overall stats look like?
 
 
 
@@ -375,7 +378,7 @@ ggplot(trending_data, aes(as.factor(days_diff), count))+
 <img src="figures/unnamed-chunk-11-1.png" width="100%" />
 
 
-Let's segment this by Country.
+Let's segment this by country.
 
 
 
@@ -389,7 +392,7 @@ ggplot(trending_data, aes(days_diff, count, fill = country))+
   labs(y = "Unique Trending Videos",
        x = "Days Until Trending",
        fill = "Country",
-       title = "Videos in Canada videos tend to become trending very quickly, \nunlike the US where this spread is wider, and GB where it is widest")
+       title = "Videos in CA tend to become trending very quickly \nIn the US, this spread is wider and it is the widest in GB")
 ```
 
 <img src="figures/unnamed-chunk-12-1.png" width="100%" />
@@ -413,13 +416,15 @@ ggplot(trending_by_day, aes(day, count, col = country)) +
        x = NULL,
        col = "Country",
        title = "No significant differences up until March (~200 videos per country per day) \nThere was a drop in GB volumes afterwards",
-       subtitle = "It is hard to tell if this was due to a data collection error or the trending process changed")
+       subtitle = "It is hard to tell if this was due to a data collection error or the trending process changed in GB")
 ```
 
 <img src="figures/Videos per Day-1.png" width="100%" />
 
 
 ## Views
+
+
 ### What do the overall stats look like for views?
 
 
@@ -445,7 +450,7 @@ ggplot(views_summary)+
   annotate("text", x = 2.7, y = 7.35, label = "Unique Trending Videos (thousands)", angle = 14, lwd = 4.5)+
   labs(y = "Total Views (billions)",
        x = NULL,
-       title = "CA leads in total views (8x more unique videos than GB and 4x more than US) \nGB has more Views than US, despite having ~50% fewer videos")
+       title = "CA leads in total views (8x more unique videos than GB and 4x more than US) \nGB has more Views than US, despite having ~50% fewer unique videos")
 ```
 
 <img src="figures/unnamed-chunk-13-1.png" width="100%" />
@@ -537,7 +542,7 @@ ggplot(views_data, aes(views_m_reached, count))+
 
 
 Let's segment this by country and see if there are any major profile differences.
-To account for the different in unique videos shown, we will look at the % of videos in each bucket rather than absolute number.
+To account for the difference in unique videos shown, we will look at the % of videos in each bucket rather than absolute number.
 
 
 
@@ -644,7 +649,9 @@ ggplot(views_by_video, aes(as.factor(count), views)) +
 
 
 ## Category
-### How do categories differ in terms of the amount of videos that made it on the trending page?
+
+
+### Which type of videos made it to the trending page?
 
 
 
@@ -675,7 +682,7 @@ ggplot(raw_data_cat, aes(x=reorder(category_title, count), y = count, fill = cat
 <img src="figures/unnamed-chunk-20-1.png" width="100%" />
 
 
-### How do categories differ in terms of views?
+### Which categories get the most views?
 
 
 
@@ -879,18 +886,18 @@ We can alse see that Entertainment and Sport videos are more controversial in th
 
 a) Public Data:
 
-* **Subscriber count** (if made public) as they could be a significant contributor to views (especially soon after a video gets posted)
-* Other **social media profiles** (high fan base could contribute to the engagement)
-* **Share count** (on Facebook, Instagram, Reddit, etc)
-* **Video length**
+* **subscriber count** (if made public) as they could be a significant contributor to views (especially soon after a video gets posted)
+* other **social media profiles** (high fan base could contribute to the engagement)
+* **share count** (on Facebook, Instagram, Reddit, etc)
+* **video length** (do longer videos perform better?)
 * **Search Engine Optimisation**
 
 b) Private Data (only the creator can access these)
 
-* **Watch time** and **% of video watched** (ie. if a video has a total length of 10 mins, what gets watched on average)
+* **watch time** and **% of video watched**
 * **% Click Through Rate** (ie. out of 100 people that see a video's thumbnail, what % clicks on it)
 
 ## Other uses for this dataset: {-}
 
 * **Clustering** analysis to analyse different types of videos
-* **Regression** analysis to see if we can predict how many views a video will get / what contributed the most
+* **Regression** analysis to see if we can predict how many views a video will get / which factors contributed the most
