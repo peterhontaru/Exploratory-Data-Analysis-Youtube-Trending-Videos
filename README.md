@@ -2,6 +2,12 @@ Exploratory Data Analysis - Youtube Trending Videos
 ================
 by Peter Hontaru
 
+<center>
+
+![YouTube logo](_support%20files/YT%20logo.png)
+
+</center>
+
 # Introduction
 
 ## Problem statement:
